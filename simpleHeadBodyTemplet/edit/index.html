@@ -554,22 +554,31 @@
         <el-input v-model="viewModel.refModels.tableRefModel.keyword" 
                   :title="viewModel.refModels.tableRefModel.keyword" 
                   :placeholder="viewModel.refModels.tableRefModel.search_placeholder"
-                  :clearable="viewModel.refModels.tableRefModel.search_clearable"
+                  :clearable="viewModel.refModels.tableRefModel.search_clearable && !viewModel.refModels.tableRefModel.refTable.loading"
                   :disabled="viewModel.refModels.tableRefModel.refTable.loading"
                   :size="viewModel.size">
-          <el-select v-model="viewModel.refModels.tableRefModel.search_key" slot="prepend" placeholder="请选择" :size="viewModel.size" style="width: 80px">
+          <el-select v-model="viewModel.refModels.tableRefModel.search_key" 
+                     slot="prepend" 
+                     placeholder="请选择" 
+                     :size="viewModel.size" 
+                     :disabled="viewModel.refModels.tableRefModel.refTable.loading"
+                     style="width: 80px">
             <el-option label="全部" value=""></el-option>
-            <el-option v-for="column in viewModel.refModels.tableRefModel.columnModel" :label="column.label" :value="column.key">
-            </el-option>
+            <el-option v-for="column in viewModel.refModels.tableRefModel.columnModel" :label="column.label" :value="column.key"></el-option>
           </el-select>
-          <el-button slot="append" icon="el-icon-search" title="搜索" @click="viewModel.refModels.tableRefModel.events.search">
-          </el-button>
+          <el-button slot="append" icon="el-icon-search" title="搜索" :disabled="viewModel.refModels.tableRefModel.refTable.loading" @click="viewModel.refModels.tableRefModel.events.search"></el-button>
         </el-input>
-        <el-checkbox v-model="viewModel.refModels.tableRefModel.auto_search" :disabled="viewModel.refModels.tableRefModel.refTable.loading" class="right" style="right: -83px; margin-top: -25px">自动筛选</el-checkbox>
-        <el-button v-if="viewModel.refModels.tableRefModel.enabled_refresh" type="text" icon="el-icon-refresh" :loading="viewModel.refModels.tableRefModel.refTable.loading" style="float: right;margin-right: -146px;margin-top: -33px;" title="刷新参照数据" 
-          @click="viewModel.refModels.tableRefModel.events.refresh">
-          <!-- <i class="el-icon-refresh"></i>  -->
-          刷新
+        <el-checkbox v-model="viewModel.refModels.tableRefModel.auto_search" 
+                     :disabled="viewModel.refModels.tableRefModel.refTable.loading" 
+                     class="right" style="right: -83px; margin-top: -25px">
+                     自动筛选
+        </el-checkbox>
+        <el-button v-if="viewModel.refModels.tableRefModel.enabled_refresh" 
+                   type="text" icon="el-icon-refresh" 
+                   :loading="viewModel.refModels.tableRefModel.refTable.loading" 
+                   style="float: right;margin-right: -146px;margin-top: -33px;" title="刷新参照数据" 
+                   @click="viewModel.refModels.tableRefModel.events.refresh">
+                   刷新
         </el-button>
       </div>
       
@@ -580,7 +589,8 @@
         :height="viewModel.refModels.tableRefModel.refTable.height" 
         v-loading="viewModel.refModels.tableRefModel.refTable.loading"
         :element-loading-text="viewModel.refModels.tableRefModel.refTable.element_loading_text"
-        :size="viewModel.size">
+        :size="viewModel.size"
+        class="ref-table">
         <el-table-column type="selection" v-if="viewModel.refModels.tableRefModel.refTable.show_selection" :width="40"></el-table-column>
         <el-table-column type="index" v-if="viewModel.refModels.tableRefModel.refTable.show_index" :width="40"></el-table-column>
         <el-table-column v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel"
@@ -594,9 +604,8 @@
       </el-table>
 
       <span slot="footer" class="dialog-footer">
-
-        <el-button :disabled="viewModel.refModels.tableRefModel.refTable.loading" type="primary" :size="viewModel.size" @click="viewModel.refModels.tableRefModel.events.confirm" title="确定">确 定</el-button>
-        <el-button :disabled="viewModel.refModels.tableRefModel.refTable.loading" type="warning" :size="viewModel.size" @click="viewModel.refModels.tableRefModel.events.clear" title="清除选择">清 除</el-button>
+        <el-button type="primary" :size="viewModel.size" :disabled="viewModel.refModels.tableRefModel.refTable.loading" @click="viewModel.refModels.tableRefModel.events.confirm" title="确定">确 定</el-button>
+        <el-button type="warning" :size="viewModel.size" :disabled="viewModel.refModels.tableRefModel.refTable.loading" @click="viewModel.refModels.tableRefModel.events.clear" title="清除选择">清 除</el-button>
         <el-button :size="viewModel.size" @click="viewModel.refModels.tableRefModel.events.close" title="关闭">关 闭</el-button>
       </span>
     </el-dialog>

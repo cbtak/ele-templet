@@ -1,18 +1,18 @@
 /*******************************************/
-/*             自定义样式                  */
+/*             自定义扩展样式              */
 /*******************************************/
 /** body 样式 */
 body {
 	padding: 0px;
 	/*margin: 0 5px; */
 }
+/** 隐藏 */
 .hide {
     display: none;
 }
-
-
+/** 打印样式 */
 @media print{
-    .noprint{
+    .no-print{
         display:none
     }
     .print {
@@ -21,31 +21,19 @@ body {
 }
 
 /** 滚动条样式 **/
-div::-webkit-scrollbar-track-piece {
+body::-webkit-scrollbar-track-piece, div::-webkit-scrollbar-track-piece {
     background: #d3dce6;
 }
-div::-webkit-scrollbar {
+body::-webkit-scrollbar, div::-webkit-scrollbar {
     width: 10px;
     height:10px;
 }
-div::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
     /**background: #99a9bf;*/
     background: skyBlue ;
     border-radius: 20px;
 }
 
-body::-webkit-scrollbar-track-piece {
-    background: #d3dce6;
-}
-body::-webkit-scrollbar {
-    width: 10px;
-    height:10px;
-}
-body::-webkit-scrollbar-thumb {
-    /**background: #99a9bf;*/
-    background: skyBlue ;
-    border-radius: 20px;
-}
 
 /** 浮动:居左 */
 .left {
@@ -59,15 +47,7 @@ body::-webkit-scrollbar-thumb {
 .toolbar {
 	min-height: 40px;
 }
-.toolbar-mini {
-	min-height: 28px;
-}
-.toolbar-small {
-	min-height: 32px;
-}
-.toolbar-medium {
-	min-height: 36px;
-}
+/** 显示工具栏按钮样式 */
 .show-toolbar-icon {
 	position:absolute;
 	top: -4px;
@@ -78,35 +58,40 @@ body::-webkit-scrollbar-thumb {
 	transform: rotate(90deg);
 	z-index: 999;
 }
-
+/** 参照控件操作按钮内边距样式 */
 .ref-input > .el-input-group__append {
 	padding: 0 12px !important;
 }
 
-.ref-dialog {
 
+/** 参照弹出框样式 */
+.ref-dialog {
 }
 
+/** 参照弹出框header内边距样式 */
 .ref-dialog > .el-dialog > .el-dialog__header {
     padding: 10px 10px 5px !important;
 }
-
+/** 参照弹出框body内边距样式 */
 .ref-dialog > .el-dialog > .el-dialog__body {
     padding: 0px 10px !important;
 }
-
+/** 参照弹出框footer内边距样式 */
 .ref-dialog > .el-dialog > .el-dialog__footer {
     padding: 10px !important;
 }
 
+/** 参照弹出框footer区域按钮间距样式 */
 .ref-dialog > .el-dialog > .el-dialog__footer > .dialog-footer > .el-button+.el-button {
     margin-left: 5px;
 }
 
+/** 表格列头样式重写 */
 .el-table th {
 	padding : 0px;
     height : 35px !important;
 }
+/** 表格单元格样式重写 */
 .el-table td {
 	padding : 0px;
     height : 28px !important;
@@ -117,6 +102,10 @@ body::-webkit-scrollbar-thumb {
 	white-space: nowrap !important;
 }
 
+/** 参照框表格选择列列头全选checkbox 隐藏 */
+.is-leaf > .cell > .el-checkbox {
+	display: none;
+}
 
 /*******************************************/
 /*             重写element-ui样式          */

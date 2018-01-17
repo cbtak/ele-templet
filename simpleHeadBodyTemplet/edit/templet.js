@@ -476,7 +476,36 @@ window.$T = window.$t = (function ($w, $a) {
 						$app.viewModel.refModels.tableRefModel.show();
 					}
 				},
-
+				
+				request : function(appData) {
+					if(!appData.url) {
+						throw "url is null.";
+					}
+					if(appData.type && appData.type.toLowerCase() === "post") {
+						$a.post(
+							appData.url, 
+							appData.data,
+							{
+								headers : appData.headers || {}
+							}
+						).then(function(response) {
+							if(appData.success) appData.success(response); 
+						}).catch(function(err) {
+							if(appData.success) appData.success(err); 
+						});
+					} else {
+						$a.get(
+							appData.url, 
+							{
+								params : appData.data || {}
+							}
+						).then(function(response) {
+							if(appData.success) appData.success(response); 
+						}).catch(function(err) {
+							if(appData.success) appData.success(err); 
+						});
+					}
+				}
 			}
 
 			/** build process */
@@ -533,8 +562,8 @@ window.$T = window.$t = (function ($w, $a) {
 							element_loading_text : "正在加载中...",
 							// 参照表格列模型
 							columnModel : [
-								{key : "code", data_key : "code", label : "编码", sortable : true, min_width:200}, 
-								{key : "age", data_key : "age", label : "年龄", width : 300}, 
+								{key : "code", data_key : "code", label : "编码", sortable : true, width:100}, 
+								{key : "age", data_key : "age", label : "年龄", width : 80}, 
 								{key : "name", data_key : "name", label : "名称"}
 							]
 						},
@@ -566,7 +595,7 @@ window.$T = window.$t = (function ($w, $a) {
 								$app.viewModel.refModels.tableRefModel.hide();
 							},
 							search : function() {
-
+								alert()
 							},
 							refresh : function() {
 								$app.viewModel.refModels.tableRefModel.refTable.loading = true;
@@ -828,4 +857,4 @@ window.$T = window.$t = (function ($w, $a) {
 			}
 		}
 	}
-})(window, window);
+})(window, axios);

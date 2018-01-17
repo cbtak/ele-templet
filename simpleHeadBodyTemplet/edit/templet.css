@@ -1,0 +1,217 @@
+/*******************************************/
+/*             自定义样式                  */
+/*******************************************/
+/** body 样式 */
+body {
+	padding: 0px;
+	/*margin: 0 5px; */
+}
+/** 浮动:居左 */
+.left {
+	float: left;
+}
+/** 浮动:居右 */
+.right {
+	float: right;
+}
+/** 工具栏样式 */
+.toolbar {
+	min-height: 40px;
+}
+.toolbar-mini {
+	min-height: 28px;
+}
+.toolbar-small {
+	min-height: 32px;
+}
+.toolbar-medium {
+	min-height: 36px;
+}
+.show-toolbar-icon {
+	position:absolute;
+	top: -4px;
+	right: 50%;
+	color: gray;
+	font-size: 22px;
+	cursor:pointer;
+	transform: rotate(90deg);
+	z-index: 999;
+}
+
+.ref-input > .el-input-group__append {
+	padding: 0 12px !important;
+}
+
+.ref-dialog {
+
+}
+
+.ref-dialog > .el-dialog > .el-dialog__header {
+    padding: 10px 10px 5px !important;
+}
+
+.ref-dialog > .el-dialog > .el-dialog__body {
+    padding: 0px 10px !important;
+}
+
+.ref-dialog > .el-dialog > .el-dialog__footer {
+    padding: 10px !important;
+}
+
+.ref-dialog > .el-dialog > .el-dialog__footer > .dialog-footer > .el-button+.el-button {
+    margin-left: 5px;
+}
+
+.el-table th {
+	padding : 0px;
+    height : 35px !important;
+    background-color: #eef1f6;
+    color: #1f2d3d;
+    /*text-align: center;*/
+}
+.el-table td {
+	padding : 0px;
+    height : 28px !important;
+}
+
+
+/*******************************************/
+/*             重写element-ui样式          */
+/*******************************************/
+
+/** 布局容器上边距样式重写 */
+.el-container {
+	/*margin-top: -1px;*/
+}
+
+/** 布局容器头部高度样式重写（默认为60px） */
+.el-container .el-header {
+	/*padding: 0px;*/
+}
+
+/** 布局容器头部、内容、页脚内边距样式重写 */
+.el-header, .el-main, .el-footer {
+	height: 100% !important;
+	padding: 0px 0px 5px 0px!important;
+}
+
+/** 卡片控件内边距样式重写 */
+.el-card__header {
+	padding: 5px 5px;
+}
+
+/** 表单项目底部外边距重写 */
+.el-form-item {
+	margin-bottom: 5px !important;
+	margin-right: 5px !important;
+}
+
+/** 表单项目label内边距及溢出样式重写 */
+.el-form-item__label {
+	padding: 0 8px 0 0 !important;
+	text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/** 表单项目行高重写 */
+.el-form-item__label, .el-form-item__content {
+	line-height: 38px;
+}
+
+/** input控件内边距重写 */
+.el-input__inner {
+	padding: 0 5px;
+}
+/** cascader 组件 label 内边距重写 */
+.el-cascader__label {
+	padding: 0 25px 0 5px;
+}
+/** Dialog 组件内边距及行高样式重写 */
+.el-dialog__body {
+	line-height: 24px;
+	padding: 0px 10px 10px 10px !important;
+}
+
+/** radio 组件 label 左内边距样式重写 */
+.el-radio__label {
+    padding-left: 0px;
+}
+
+/** radio 组件左外边距样式重写 */
+.el-radio+.el-radio {
+    margin-left: 8px;
+}
+/** radio group 组件左外边距样式重写 */
+.el-radio-group {
+	margin-left: 0px !important;
+}
+
+/** checkbox 组件 label 左外边距样式重写 */
+.el-checkbox__label {
+    padding-left: 4px;
+}
+/** checkbox 组件项目左外边距样式重写 */
+.el-checkbox+.el-checkbox {
+    margin-left: 8px;
+}
+
+/** rate 组件宽度样式重写 */
+.el-rate__item {
+    width: 21px !important;
+}
+
+/** rate 组件行高样式重写 */
+.el-rate {
+    line-height: 1.5;
+}
+
+/** 时间范围组件选择时删除icon错位，重写样式修正 */
+.el-range__close-icon {
+	position: absolute;
+    right: 5px;
+    top: 0px;
+}
+
+/** 时间范围组件选择时内容折行，重写样式修正 */
+.el-date-editor--timerange, .el-date-editor--daterange, .el-date-editor--datetimerange {
+	padding-right: 20px !important;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+/** daterange、datetimerange 弹出时间选择器时位置偏移样式修正 */
+.el-date-picker__editor-wrap > .el-time-panel,
+.el-date-range-picker__time-picker-wrap > .el-time-panel {
+	margin-left: -21px;
+}
+
+/** color-picker 组件宽度样式重写 */
+.el-color-picker__trigger {
+	width: 100% !important;
+}
+
+
+.el-input.is-disabled .el-input__inner {
+    background-color: #f6f6f6;
+    border-color: #e4e7ed;
+    color: #7d7d7d;
+    cursor: not-allowed;
+}
+
+.el-select .el-tag {
+    margin: 2px 2px 2px 2px;
+}
+
+.el-select > .el-tag--small {
+    line-height: 20px;
+}
+
+.el-select .el-tag__close.el-icon-close {
+    right: -2px;
+}
+
+.el-select .el-tag--small {
+    padding: 0 4px;
+}

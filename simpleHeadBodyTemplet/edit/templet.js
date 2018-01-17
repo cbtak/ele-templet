@@ -510,12 +510,45 @@ window.$T = window.$t = (function ($w, $a) {
 
 				refModels : {
 					tableRefModel : {
-						title : "参照",
-						visible : false,
-						width : 560,
-						show_close : false,
-						close_on_click_modal : false,
-						class : null,
+						title : "参照",							// 参照窗口标题
+						visible : false,						// 参照窗口显示属性
+						width : 560,							// 参照窗口宽度
+						show_close : true,						// 显示关闭按钮
+						close_on_click_modal : false,			// 点击模态层关闭参照
+						class : null,							// 参照的自定义样式表
+						search_key : "",						// 搜索属性key(筛选的字段，为空时为所有属性)
+						enabled_refresh : true,					// 启用刷新
+						enabled_search : true,					// 启用搜索状态
+						auto_search : true,						// 自动搜索
+						search_clearable : true,				// 搜索框是否启用清除
+						search_placeholder : "请输入关键字",	// 搜索框占位符
+						// 表格参照配置
+						refTable : {
+							height : 300,						// 表格高度
+							highlight_current_row : true,		// 高亮当前行
+							show_selection : true,				// 显示选择列
+							show_index : true,					// 显示索引列（行号）
+							show_overflow_tooltip : true,		// 单元格内容溢出tips
+							loading : false,
+							element_loading_text : "正在加载中...",
+							// 参照表格列模型
+							columnModel : [
+								{key : "code", data_key : "code", label : "编码", sortable : true, min_width:200}, 
+								{key : "age", data_key : "age", label : "年龄", width : 300}, 
+								{key : "name", data_key : "name", label : "名称"}
+							]
+						},
+						// 参照数据模型
+						refDataModel : [
+							{id : "1001", code : "1001", age : 22, name : "张三"},
+							{id : "1002", code : "1002", age : 18, name : "小王"},
+							{id : "1003", code : "1003", age : 33, name : "李二"},
+						],
+						/** 参照初始化 */
+						initRefModel : function(appData) {
+
+						},
+						
 						show : function(appData) {
 							$app.viewModel.refModels.tableRefModel.visible = true;
 						},
@@ -531,6 +564,15 @@ window.$T = window.$t = (function ($w, $a) {
 							},
 							close: function() {
 								$app.viewModel.refModels.tableRefModel.hide();
+							},
+							search : function() {
+
+							},
+							refresh : function() {
+								$app.viewModel.refModels.tableRefModel.refTable.loading = true;
+								setTimeout(function() {
+									$app.viewModel.refModels.tableRefModel.refTable.loading = false;
+								}, 5000);
 							}
 						}
 					},

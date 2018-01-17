@@ -6,6 +6,47 @@ body {
 	padding: 0px;
 	/*margin: 0 5px; */
 }
+.hide {
+    display: none;
+}
+
+
+@media print{
+    .noprint{
+        display:none
+    }
+    .print {
+        display:block;
+    }
+}
+
+/** 滚动条样式 **/
+div::-webkit-scrollbar-track-piece {
+    background: #d3dce6;
+}
+div::-webkit-scrollbar {
+    width: 10px;
+    height:10px;
+}
+div::-webkit-scrollbar-thumb {
+    /**background: #99a9bf;*/
+    background: skyBlue ;
+    border-radius: 20px;
+}
+
+body::-webkit-scrollbar-track-piece {
+    background: #d3dce6;
+}
+body::-webkit-scrollbar {
+    width: 10px;
+    height:10px;
+}
+body::-webkit-scrollbar-thumb {
+    /**background: #99a9bf;*/
+    background: skyBlue ;
+    border-radius: 20px;
+}
+
 /** 浮动:居左 */
 .left {
 	float: left;
@@ -65,13 +106,15 @@ body {
 .el-table th {
 	padding : 0px;
     height : 35px !important;
-    background-color: #eef1f6;
-    color: #1f2d3d;
-    /*text-align: center;*/
 }
 .el-table td {
 	padding : 0px;
     height : 28px !important;
+}
+
+/** 表格单元格内容超出时不换行 */
+.el-table th>.cell, .el-table td>.cell {
+	white-space: nowrap !important;
 }
 
 
@@ -214,4 +257,9 @@ body {
 
 .el-select .el-tag--small {
     padding: 0 4px;
+}
+
+/** 按钮文字与图标的间隔距离样式重写 */
+.el-button > span {
+	    margin-left: 0px !important;
 }

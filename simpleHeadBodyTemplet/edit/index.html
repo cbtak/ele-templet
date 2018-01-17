@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- 引入样式 -->
-  <link rel="stylesheet" href="../../libs/node_modules/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="../../node_modules/element-ui/lib/theme-chalk/index.css">
   <link rel="stylesheet" type="text/css" href="templet.css">
 </head>
 <body>
@@ -549,29 +549,54 @@
       :show-close="viewModel.refModels.tableRefModel.show_close"
       :highlight-current-row="true"
       :class="'ref-dialog ' + (viewModel.refModels.tableRefModel.class || '')">
+
+      <div v-if="viewModel.refModels.tableRefModel.enabled_search" style="padding-right: 155px;margin-bottom: 5px">
+        <el-input v-model="viewModel.refModels.tableRefModel.keyword" 
+                  :title="viewModel.refModels.tableRefModel.keyword" 
+                  :placeholder="viewModel.refModels.tableRefModel.search_placeholder"
+                  :clearable="viewModel.refModels.tableRefModel.search_clearable"
+                  :disabled="viewModel.refModels.tableRefModel.refTable.loading"
+                  :size="viewModel.size">
+          <el-select v-model="viewModel.refModels.tableRefModel.search_key" slot="prepend" placeholder="请选择" :size="viewModel.size" style="width: 80px">
+            <el-option label="全部" value=""></el-option>
+            <el-option v-for="column in viewModel.refModels.tableRefModel.columnModel" :label="column.label" :value="column.key">
+            </el-option>
+          </el-select>
+          <el-button slot="append" icon="el-icon-search" title="搜索" @click="viewModel.refModels.tableRefModel.events.search">
+          </el-button>
+        </el-input>
+        <el-checkbox v-model="viewModel.refModels.tableRefModel.auto_search" :disabled="viewModel.refModels.tableRefModel.refTable.loading" class="right" style="right: -83px; margin-top: -25px">自动筛选</el-checkbox>
+        <el-button v-if="viewModel.refModels.tableRefModel.enabled_refresh" type="text" icon="el-icon-refresh" :loading="viewModel.refModels.tableRefModel.refTable.loading" style="float: right;margin-right: -146px;margin-top: -33px;" title="刷新参照数据" 
+          @click="viewModel.refModels.tableRefModel.events.refresh">
+          <!-- <i class="el-icon-refresh"></i>  -->
+          刷新
+        </el-button>
+      </div>
       
-      <el-table :data="[{},{}]"  border :max-height="400" :size="viewModel.size">
-        <el-table-column type="selection"></el-table-column>
-        <el-table-column type="index"></el-table-column>
-        <el-table-column
-          prop="date"
-          label="日期"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="姓名"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="address"
-          label="地址">
+      
+      
+      <el-table :data="viewModel.refModels.tableRefModel.refDataModel" border 
+        :highlight-current-row="viewModel.refModels.tableRefModel.refTable.highlight_current_row" 
+        :height="viewModel.refModels.tableRefModel.refTable.height" 
+        v-loading="viewModel.refModels.tableRefModel.refTable.loading"
+        :element-loading-text="viewModel.refModels.tableRefModel.refTable.element_loading_text"
+        :size="viewModel.size">
+        <el-table-column type="selection" v-if="viewModel.refModels.tableRefModel.refTable.show_selection" :width="40"></el-table-column>
+        <el-table-column type="index" v-if="viewModel.refModels.tableRefModel.refTable.show_index" :width="40"></el-table-column>
+        <el-table-column v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel"
+          :show-overflow-tooltip="viewModel.refModels.tableRefModel.refTable.show_overflow_tooltip"
+          :prop="column.data_key"
+          :label="column.label"
+          :min-width="column.min_width"
+          :width="column.width"
+          :sortable="column.sortable">
         </el-table-column>
       </el-table>
 
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" :size="viewModel.size" @click="viewModel.refModels.tableRefModel.events.confirm" title="确定">确 定</el-button>
-        <el-button type="warning" :size="viewModel.size" @click="viewModel.refModels.tableRefModel.events.clear" title="清除选择">清 除</el-button>
+
+        <el-button :disabled="viewModel.refModels.tableRefModel.refTable.loading" type="primary" :size="viewModel.size" @click="viewModel.refModels.tableRefModel.events.confirm" title="确定">确 定</el-button>
+        <el-button :disabled="viewModel.refModels.tableRefModel.refTable.loading" type="warning" :size="viewModel.size" @click="viewModel.refModels.tableRefModel.events.clear" title="清除选择">清 除</el-button>
         <el-button :size="viewModel.size" @click="viewModel.refModels.tableRefModel.events.close" title="关闭">关 闭</el-button>
       </span>
     </el-dialog>
@@ -580,11 +605,13 @@
 </div>
 </body>
 <!-- 引入 Vue -->
-<script type="text/javascript" src="../../libs/node_modules/vue/dist/vue.js"></script>
+<script type="text/javascript" src="../../node_modules/vue/dist/vue.js"></script>
 <!-- 引入组件库 -->
-<script type="text/javascript" src="../../libs/node_modules/element-ui/lib/index.js"></script>
+<script type="text/javascript" src="../../node_modules/element-ui/lib/index.js"></script>
+<!-- 引入 axios  -->
+<script type="text/javascript" src="../../node_modules/axios/dist/axios.js"></script>
 <!-- 引入moment -->
-<script type="text/javascript" src="../../libs/node_modules/moment/moment.js"></script>
+<script type="text/javascript" src="../../node_modules/moment/moment.js"></script>
 <!-- 引入模板JS -->
 <script type="text/javascript" src="templet.js"></script>
 <!-- 引入页面JS -->

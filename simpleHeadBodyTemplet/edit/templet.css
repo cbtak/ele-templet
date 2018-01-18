@@ -102,9 +102,24 @@ body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
 	white-space: nowrap !important;
 }
 
-/** 参照框表格选择列列头全选checkbox 隐藏 */
-.ref-table .is-leaf .cell .el-checkbox .el-checkbox__input .el-checkbox__inner {
+/** 参照框表格样式 */
+.ref-table {
+} 
+
+/** 参照框表格单选时选择列列头样式 */
+.ref-table--single-selection .is-leaf .cell .el-checkbox {
     display: none !important;
+}
+/** 参照框表格多选时选择列列头样式 */
+.ref-table--multiple-selection .is-leaf .cell .el-checkbox {
+}
+
+.el-dialog__header,.el-dialog__footer {
+    cursor:move;
+}
+
+.el-pagination {
+    padding: 2px 5px 0px 5px;
 }
 
 /*******************************************/

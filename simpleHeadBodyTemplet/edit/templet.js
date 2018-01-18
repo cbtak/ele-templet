@@ -6,13 +6,7 @@
 
 			/*********************************** 对象定义 ************************************/
 
-			$w.isNull = function(val) {
-				return val === null || val === "" || typeof val === "undefined" || (typeof val !== "object" && typeof val !== "function" && !val.length && isNaN(val)) || false;
-			}
-
-			$w.isNotNull = function(val) {
-				return !isNull(val);
-			}
+			
 
 			/** 预置方法模型 */
 			let methodModel = {
@@ -474,6 +468,7 @@
 				showRefModel : function(appData) {
 					if(appData.refModel.type == "table") {
 						$app.viewModel.refModels.tableRefModel.show();
+						$app.viewModel.refModels.tableRefModel.initRefModel();
 					}
 				},
 				
@@ -550,32 +545,62 @@
 						enabled_search : true,					// 启用搜索状态
 						auto_search : true,						// 自动搜索
 						search_clearable : true,				// 搜索框是否启用清除
+						keyword : null,
 						search_placeholder : "请输入关键字",	// 搜索框占位符
+
+						loading : false,						// 加载状态
+						element_loading_text : "正在加载中...",	// 加载提示文本
+
 						// 表格参照配置
 						refTable : {
 							height : 300,						// 表格高度
+							// width : 460,						// 表格宽度
+							max_height : 300,					// 表格最大高度
 							highlight_current_row : true,		// 高亮当前行
 							show_selection : true,				// 显示选择列
 							show_index : true,					// 显示索引列（行号）
+							multiple : true,					// 是否多选
+							multiple_limit : 0,					// 最大可选择行（暂未启用）
 							show_overflow_tooltip : true,		// 单元格内容溢出tips
-							loading : false,
-							element_loading_text : "正在加载中...",
+							
 							// 参照表格列模型
 							columnModel : [
-								{key : "code", data_key : "code", label : "编码", sortable : true, width:100}, 
+								{key : "code", data_key : "code", label : "编码", sortable : true, width:80}, 
 								{key : "age", data_key : "age", label : "年龄", width : 80}, 
 								{key : "name", data_key : "name", label : "名称"}
-							]
+							],
+
+							// 分页控件
+			                pagination : {
+			                	enabled : true,				// 启用分页
+			                    page : {
+			                        total : 0,		//总记录数
+			                        pageNo : 1,		// 当前页码
+			                        pageSize : 20	// 每页显示条数
+			                    },
+			                    page_sizes : [20, 30, 50, 100],		// 每页显示个数选择器的选项设置
+			                    layout : "total, sizes, prev, pager, next"	// 组件布局，子组件名用逗号分隔 total, sizes, prev, pager, next, jumper
+			                }
 						},
 						// 参照数据模型
-						refDataModel : [
-							{id : "1001", code : "1001", age : 22, name : "张三"},
-							{id : "1002", code : "1002", age : 18, name : "小王"},
-							{id : "1003", code : "1003", age : 33, name : "李二"},
-						],
+						refDataModel : [],
+						// 参照已选择数据模型
+						selectionModel : [],
+						show_ref_selection : true,
+						selection_width : 300,
+						selection_colspan : 10,
+
 						/** 参照初始化 */
 						initRefModel : function(appData) {
+							for(var i=0; i<50; i++) {
+								$app.viewModel.refModels.tableRefModel.refDataModel.push({id : "100" + i, code : "100" + i, age : 22, name : "张三" + i});
+							}
 
+							if(viewModel.refModels.tableRefModel.refTable.pagination.enabled) {
+								$app.viewModel.refModels.tableRefModel.refTable.pagination.page.total = $app.viewModel.refModels.tableRefModel.refDataModel.length;
+			                    $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageNo = 1;
+							}
+		                    $app.viewModel.refModels.tableRefModel.events.setShowRefData();
 						},
 						
 						show : function(appData) {
@@ -584,24 +609,171 @@
 						hide : function(appData) {
 							$app.viewModel.refModels.tableRefModel.visible = false;
 						},
+
 						events : {
 							confirm : function() {
-								$app.viewModel.refModels.tableRefModel.hide();
+								try {
+									$app.viewModel.refModels.tableRefModel.hide();
+								} catch(err) {
+
+								}
 							},
 							clear: function() {
-								
+								// 清空参照表格选择行
+								$app.$refs.refTable.clearSelection();
+								// 清空参照已选择数据模型
+								$app.viewModel.refModels.tableRefModel.selectionModel = [];
 							},
 							close: function() {
 								$app.viewModel.refModels.tableRefModel.hide();
 							},
 							search : function() {
-								alert()
+								let keyword = $app.viewModel.refModels.tableRefModel.keyword;
+		                        let search_key = $app.viewModel.refModels.tableRefModel.search_key;
+		                        let filterResult = isNull(keyword) ? $app.viewModel.refModels.tableRefModel.refDataModel : $app.viewModel.refModels.tableRefModel.refDataModel.filter(function(item) {
+		                        	if(isNotNull(search_key)) {
+		                        		return isNotNull(item[search_key]) && String(item[search_key]).indexOf(keyword) != -1;
+		                        	} else {
+		                        		let isEquals = false;
+		                        		$app.viewModel.refModels.tableRefModel.refTable.columnModel.forEach(function(column) {
+		                        			if(isNotNull(item[column.data_key]) && String(item[column.data_key]).indexOf(keyword) != -1) {
+		                        				isEquals = true;
+		                        			}
+		                        		});
+		                        		return isEquals;
+		                        	}
+		                        });
+
+		                        if(viewModel.refModels.tableRefModel.refTable.pagination.enabled) {
+		                        	$app.viewModel.refModels.tableRefModel.refTable.pagination.page.total = filterResult.length;
+			                    	$app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageNo = 1;
+
+			                        var startIndex = ($app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageNo - 1) * $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageSize;
+			                        var endIndex = startIndex + $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageSize;
+			                        $app.viewModel.refModels.tableRefModel.refTable.data = filterResult.slice(startIndex, endIndex);
+			                        
+			                        // 设置表格数据时无法同步设置选中状态，此处作延迟处理
+			                        setTimeout(function() {
+			                        	$app.viewModel.refModels.tableRefModel.refTable.data.forEach(function(item){
+				                        	if($app.viewModel.refModels.tableRefModel.selectionModel.indexOf(item) != -1) {
+												$app.$refs.refTable.toggleRowSelection(item);
+											}
+				                        });
+			                        }, 100);
+		                    	} else {
+		                    		$app.viewModel.refModels.tableRefModel.refTable.data = filterResult;
+		                    	}
+							},
+							keywordChange : function() {
+								console.log("## keyword: " + $app.viewModel.refModels.tableRefModel.keyword);
+		                        if(!$app.viewModel.refModels.tableRefModel.auto_search) {
+		                            return;
+		                        }
+								$app.viewModel.refModels.tableRefModel.events.search();
 							},
 							refresh : function() {
-								$app.viewModel.refModels.tableRefModel.refTable.loading = true;
+								$app.viewModel.refModels.tableRefModel.loading = true;
 								setTimeout(function() {
-									$app.viewModel.refModels.tableRefModel.refTable.loading = false;
+									$app.viewModel.refModels.tableRefModel.loading = false;
 								}, 5000);
+							},
+							showRefSelection : function() {
+								$app.viewModel.refModels.tableRefModel.show_ref_selection = !$app.viewModel.refModels.tableRefModel.show_ref_selection;
+								//$app.viewModel.refModels.tableRefModel.width += $app.viewModel.refModels.tableRefModel.selection_width * (!$app.viewModel.refModels.tableRefModel.show_ref_selection ? -1 : 1);
+							},
+
+							handleSizeChange : function (val) {
+		                        $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageSize = val;
+		                        if($app.viewModel.refModels.tableRefModel.refTable.pagination.page.total) {
+		                            $app.viewModel.refModels.tableRefModel.events.setShowRefData();
+		                        }
+		                    },
+
+		                    handleCurrentChange : function (val) {
+		                        $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageNo = val;
+		                        $app.viewModel.refModels.tableRefModel.events.setShowRefData();
+		                    },
+		                    setShowRefData : function () {
+		                    	if(viewModel.refModels.tableRefModel.refTable.pagination.enabled) {
+			                        var startIndex = ($app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageNo - 1) * $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageSize;
+			                        var endIndex = startIndex + $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageSize;
+			                        $app.viewModel.refModels.tableRefModel.refTable.data = $app.viewModel.refModels.tableRefModel.refDataModel.slice(startIndex, endIndex);
+			                        
+			                        // 设置表格数据时无法同步设置选中状态，此处作延迟处理
+			                        setTimeout(function() {
+			                        	$app.viewModel.refModels.tableRefModel.refTable.data.forEach(function(item){
+				                        	if($app.viewModel.refModels.tableRefModel.selectionModel.indexOf(item) != -1) {
+												$app.$refs.refTable.toggleRowSelection(item);
+											}
+				                        });
+			                        }, 100);
+		                    	} else {
+		                    		$app.viewModel.refModels.tableRefModel.refTable.data = $app.viewModel.refModels.tableRefModel.refDataModel;
+		                    	}
+
+		                    },
+
+
+							rowClick : function(row, event, column) {},
+
+							rowDblclick : function(row, event) {
+								// 选择/取消选择当前行
+								$app.$refs.refTable.toggleRowSelection(row);
+								// 调用选择事件处理
+								$app.viewModel.refModels.tableRefModel.events.select($app.$refs.refTable.selection, row);
+								if(!$app.viewModel.refModels.tableRefModel.refTable.multiple && $app.viewModel.refModels.tableRefModel.selectionModel.length) {
+									$app.viewModel.refModels.tableRefModel.events.confirm();
+								}
+							},
+							select : function(selection, row) {
+								if($app.viewModel.refModels.tableRefModel.refTable.multiple) {
+									// 多选处理
+									if($app.$refs.refTable.selection.indexOf(row) != -1) {
+										if($app.viewModel.refModels.tableRefModel.selectionModel.indexOf(row) == -1) {
+											$app.viewModel.refModels.tableRefModel.selectionModel.push(row);
+										}
+									} else {
+										$app.viewModel.refModels.tableRefModel.selectionModel.forEach(function(item, index, rows) {
+											if(item == row) {
+												$app.viewModel.refModels.tableRefModel.selectionModel.splice(index,1);
+											}
+										});
+									} 
+								} else {
+									// 单选处理
+									if($app.$refs.refTable.selection.indexOf(row) != -1) {
+										$app.$refs.refTable.clearSelection();
+										$app.$refs.refTable.toggleRowSelection(row);
+										$app.viewModel.refModels.tableRefModel.selectionModel = [row];
+									} else {
+										$app.$refs.refTable.clearSelection();
+										$app.viewModel.refModels.tableRefModel.selectionModel = [];
+									}
+								}
+							},
+							selectAll : function(selection) {
+								if(selection.length) {
+									selection.forEach(function(row) {
+										if($app.viewModel.refModels.tableRefModel.selectionModel.indexOf(row) == -1) {
+											$app.viewModel.refModels.tableRefModel.selectionModel.push(row);
+										}
+									});
+								} else if($app.$refs.refTable.data.length && $app.viewModel.refModels.tableRefModel.selectionModel.length) {
+									$app.viewModel.refModels.tableRefModel.selectionModel = $app.viewModel.refModels.tableRefModel.selectionModel.filter(function(item) {
+										return $app.$refs.refTable.data.indexOf(item) == -1;
+									});
+								}
+							},
+							cancelSelect : function(row) {
+								if($app.$refs.refTable.selection.indexOf(row) != -1) {
+									$app.$refs.refTable.toggleRowSelection(row);
+								}
+
+								$app.viewModel.refModels.tableRefModel.selectionModel.forEach(function(item, index, rows) {
+									if(item == row) {
+										$app.viewModel.refModels.tableRefModel.selectionModel.splice(index,1);
+									}
+								});
 							}
 						}
 					},

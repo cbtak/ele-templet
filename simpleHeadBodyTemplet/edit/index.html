@@ -538,10 +538,11 @@
         </span>
     </el-dialog>
 
+    <!-- :width="viewModel.refModels.tableRefModel.width ? (viewModel.refModels.tableRefModel.width + 'px') : null" -->
     <el-dialog 
       :title="viewModel.refModels.tableRefModel.title"
       :visible.sync="viewModel.refModels.tableRefModel.visible"
-      :width="viewModel.refModels.tableRefModel.width ? (viewModel.refModels.tableRefModel.width + 'px') : null"
+      :width="(viewModel.refModels.tableRefModel.width + (viewModel.refModels.tableRefModel.show_ref_selection ? viewModel.refModels.tableRefModel.selection_width : 0)) + 'px'"
       :fullscreen="viewModel.refModels.tableRefModel.fullscreen"
       :top="viewModel.refModels.tableRefModel.top"
       :modal="viewModel.refModels.tableRefModel.modal"
@@ -550,63 +551,126 @@
       :highlight-current-row="true"
       :class="'ref-dialog ' + (viewModel.refModels.tableRefModel.class || '')">
 
-      <div v-if="viewModel.refModels.tableRefModel.enabled_search" style="padding-right: 155px;margin-bottom: 5px">
+      <div v-if="viewModel.refModels.tableRefModel.enabled_search" style="padding-right: 200px;margin-bottom: 5px">
         <el-input v-model="viewModel.refModels.tableRefModel.keyword" 
                   :title="viewModel.refModels.tableRefModel.keyword" 
                   :placeholder="viewModel.refModels.tableRefModel.search_placeholder"
-                  :clearable="viewModel.refModels.tableRefModel.search_clearable && !viewModel.refModels.tableRefModel.refTable.loading"
-                  :disabled="viewModel.refModels.tableRefModel.refTable.loading"
-                  :size="viewModel.size">
+                  :clearable="viewModel.refModels.tableRefModel.search_clearable && !viewModel.refModels.tableRefModel.loading"
+                  :disabled="viewModel.refModels.tableRefModel.loading"
+                  :size="viewModel.size"
+                  @input="viewModel.refModels.tableRefModel.events.keywordChange">
           <el-select v-model="viewModel.refModels.tableRefModel.search_key" 
                      slot="prepend" 
                      placeholder="请选择" 
                      :size="viewModel.size" 
-                     :disabled="viewModel.refModels.tableRefModel.refTable.loading"
-                     style="width: 80px">
+                     :disabled="viewModel.refModels.tableRefModel.loading"
+                     style="width: 70px">
             <el-option label="全部" value=""></el-option>
-            <el-option v-for="column in viewModel.refModels.tableRefModel.columnModel" :label="column.label" :value="column.key"></el-option>
+            <el-option v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel" :label="column.label" :value="column.key"></el-option>
           </el-select>
-          <el-button slot="append" icon="el-icon-search" title="搜索" :disabled="viewModel.refModels.tableRefModel.refTable.loading" @click="viewModel.refModels.tableRefModel.events.search"></el-button>
+          <el-button slot="append" icon="el-icon-search" title="搜索" 
+                    :disabled="viewModel.refModels.tableRefModel.loading" @click="viewModel.refModels.tableRefModel.events.search" style="padding: 0px 12px"></el-button>
         </el-input>
         <el-checkbox v-model="viewModel.refModels.tableRefModel.auto_search" 
-                     :disabled="viewModel.refModels.tableRefModel.refTable.loading" 
-                     class="right" style="right: -83px; margin-top: -25px">
+                     :disabled="viewModel.refModels.tableRefModel.loading" 
+                     class="right" style="right: -85px; margin-top: -25px">
                      自动筛选
         </el-checkbox>
         <el-button v-if="viewModel.refModels.tableRefModel.enabled_refresh" 
                    type="text" icon="el-icon-refresh" 
-                   :loading="viewModel.refModels.tableRefModel.refTable.loading" 
-                   style="float: right;margin-right: -146px;margin-top: -33px;" title="刷新参照数据" 
+                   :loading="viewModel.refModels.tableRefModel.loading" 
+                   style="float: right;margin-right: -145px;margin-top: -33px;" title="刷新参照数据" 
                    @click="viewModel.refModels.tableRefModel.events.refresh">
                    刷新
         </el-button>
+        <el-button type="text"
+                   style="float: right;margin-right: -200px;margin-top: -33px;" title="展开/收缩已选择" 
+                   @click="viewModel.refModels.tableRefModel.events.showRefSelection">
+                   <span v-if="!viewModel.refModels.tableRefModel.show_ref_selection">
+                     展开<i class="el-icon-d-arrow-right"></i>
+                   </span>
+                   <span v-if="viewModel.refModels.tableRefModel.show_ref_selection">
+                     <i class="el-icon-d-arrow-left"></i>收缩
+                   </span>
+                   
+        </el-button>
       </div>
       
+      <el-row :gutter="10" v-loading="viewModel.refModels.tableRefModel.loading"
+              :element-loading-text="viewModel.refModels.tableRefModel.element_loading_text">
+        <el-col :span="24 - (viewModel.refModels.tableRefModel.show_ref_selection ? viewModel.refModels.tableRefModel.selection_colspan : 0)">
+          <!-- :style="'width:' + (viewModel.refModels.tableRefModel.refTable.width || 460) + 'px'" -->
+          <el-table ref="refTable" border 
+            :data="viewModel.refModels.tableRefModel.refTable.data" 
+            :highlight-current-row="viewModel.refModels.tableRefModel.refTable.highlight_current_row" 
+            :height="viewModel.refModels.tableRefModel.refTable.height - (viewModel.refModels.tableRefModel.refTable.pagination.enabled ? 30 : 0)" 
+            :max-height="viewModel.refModels.tableRefModel.refTable.max_height" 
+            
+            :size="viewModel.size"
+            :class="'ref-table ' + (viewModel.refModels.tableRefModel.refTable.multiple ? 'ref-table--multiple-selection' : 'ref-table--single-selection')"
+            @row-click="viewModel.refModels.tableRefModel.events.rowClick"
+            @row-dblclick="viewModel.refModels.tableRefModel.events.rowDblclick"
+            @select="viewModel.refModels.tableRefModel.events.select"
+            @select-all="viewModel.refModels.tableRefModel.events.selectAll">
+            <el-table-column type="selection" v-if="viewModel.refModels.tableRefModel.refTable.show_selection" :width="40"></el-table-column>
+            <el-table-column type="index" v-if="viewModel.refModels.tableRefModel.refTable.show_index" :width="40"></el-table-column>
+            <el-table-column v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel"
+              :show-overflow-tooltip="viewModel.refModels.tableRefModel.refTable.show_overflow_tooltip"
+              :prop="column.data_key"
+              :label="column.label"
+              :min-width="column.min_width"
+              :width="column.width"
+              :sortable="column.sortable">
+            </el-table-column>
+          </el-table>
+
+          <el-pagination small 
+            v-if="viewModel.refModels.tableRefModel.refTable.pagination.enabled"
+            :current-page="viewModel.refModels.tableRefModel.refTable.pagination.page.pageNo"
+            :page-sizes="viewModel.refModels.tableRefModel.refTable.pagination.page_sizes"
+            :page-size="viewModel.refModels.tableRefModel.refTable.pagination.page.pageSize"
+            :layout="viewModel.refModels.tableRefModel.refTable.pagination.layout"
+            :total="viewModel.refModels.tableRefModel.refTable.pagination.page.total"
+            @size-change="viewModel.refModels.tableRefModel.events.handleSizeChange"
+            @current-change="viewModel.refModels.tableRefModel.events.handleCurrentChange">
+          </el-pagination>
+
+        </el-col>
+        <el-col v-if="viewModel.refModels.tableRefModel.show_ref_selection" 
+                :span="viewModel.refModels.tableRefModel.show_ref_selection ? viewModel.refModels.tableRefModel.selection_colspan : 0">
+          <el-table border style="width: 100%"
+            :data="viewModel.refModels.tableRefModel.selectionModel" 
+            :highlight-current-row="viewModel.refModels.tableRefModel.refTable.highlight_current_row" 
+            :height="viewModel.refModels.tableRefModel.refTable.height" 
+            :max-height="viewModel.refModels.tableRefModel.refTable.max_height" 
+            empty-text="未选择任务数据."
+            :size="viewModel.size">
+            <el-table-column type="index" v-if="viewModel.refModels.tableRefModel.refTable.show_index" :width="40"></el-table-column>
+            <el-table-column v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel"
+              :show-overflow-tooltip="viewModel.refModels.tableRefModel.refTable.show_overflow_tooltip"
+              :prop="column.data_key"
+              :label="column.label"
+              :min-width="column.min_width"
+              :width="column.width"
+              :sortable="column.sortable">
+            </el-table-column>
+            <el-table-column :width="40" fixed="right">
+              <template scope="scope">
+                <i class="el-icon-close" style="color: red; cursor:pointer" title="取消选择行" @click="viewModel.refModels.tableRefModel.events.cancelSelect(scope.row)"></i>
+              </template>
+            </el-table-column>
+
+          </el-table>
+        </el-col>
+      </el-row>
       
       
-      <el-table :data="viewModel.refModels.tableRefModel.refDataModel" border 
-        :highlight-current-row="viewModel.refModels.tableRefModel.refTable.highlight_current_row" 
-        :height="viewModel.refModels.tableRefModel.refTable.height" 
-        v-loading="viewModel.refModels.tableRefModel.refTable.loading"
-        :element-loading-text="viewModel.refModels.tableRefModel.refTable.element_loading_text"
-        :size="viewModel.size"
-        class="ref-table">
-        <el-table-column type="selection" v-if="viewModel.refModels.tableRefModel.refTable.show_selection" :width="40"></el-table-column>
-        <el-table-column type="index" v-if="viewModel.refModels.tableRefModel.refTable.show_index" :width="40"></el-table-column>
-        <el-table-column v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel"
-          :show-overflow-tooltip="viewModel.refModels.tableRefModel.refTable.show_overflow_tooltip"
-          :prop="column.data_key"
-          :label="column.label"
-          :min-width="column.min_width"
-          :width="column.width"
-          :sortable="column.sortable">
-        </el-table-column>
-      </el-table>
+
 
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" :size="viewModel.size" :disabled="viewModel.refModels.tableRefModel.refTable.loading" @click="viewModel.refModels.tableRefModel.events.confirm" title="确定">确 定</el-button>
-        <el-button type="warning" :size="viewModel.size" :disabled="viewModel.refModels.tableRefModel.refTable.loading" @click="viewModel.refModels.tableRefModel.events.clear" title="清除选择">清 除</el-button>
-        <el-button :size="viewModel.size" @click="viewModel.refModels.tableRefModel.events.close" title="关闭">关 闭</el-button>
+        <el-button type="primary" :size="viewModel.size" :disabled="viewModel.refModels.tableRefModel.loading || !viewModel.refModels.tableRefModel.selectionModel.length" @click="viewModel.refModels.tableRefModel.events.confirm" title="确定">确定</el-button>
+        <el-button type="warning" :size="viewModel.size" :disabled="viewModel.refModels.tableRefModel.loading" @click="viewModel.refModels.tableRefModel.events.clear" title="清除选择">清除</el-button>
+        <el-button :size="viewModel.size" @click="viewModel.refModels.tableRefModel.events.close" title="关闭">关闭</el-button>
       </span>
     </el-dialog>
 
@@ -621,8 +685,15 @@
 <script type="text/javascript" src="../../node_modules/axios/dist/axios.js"></script>
 <!-- 引入moment -->
 <script type="text/javascript" src="../../node_modules/moment/moment.js"></script>
+<!-- 引入extend -->
+<script type="text/javascript" src="extend.js"></script>
+<!-- 引入drag -->
+<script type="text/javascript" src="drag.js"></script>
 <!-- 引入模板JS -->
 <script type="text/javascript" src="templet.js"></script>
 <!-- 引入页面JS -->
 <script type="text/javascript" src="index.js"></script>
+<script>
+  Drag.createDrag('el-dialog').enable();
+</script>
 </html>

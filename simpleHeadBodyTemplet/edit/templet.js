@@ -1,4 +1,4 @@
-window.$T = window.$t = (function ($w, $a) {
+﻿window.$T = window.$t = (function ($w, $a) {
 
 	return {
 		/** create templet */

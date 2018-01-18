@@ -1,4 +1,4 @@
-var Templet = Vue.extend(
+﻿var Templet = Vue.extend(
     $T.createTemplet({
         dataModel : {
             name : "张三",

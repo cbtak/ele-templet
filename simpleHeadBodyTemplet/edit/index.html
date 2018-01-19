@@ -687,13 +687,14 @@
 <script type="text/javascript" src="../../node_modules/moment/moment.js"></script>
 <!-- 引入extend -->
 <script type="text/javascript" src="extend.js"></script>
-<!-- 引入drag -->
-<script type="text/javascript" src="drag.js"></script>
 <!-- 引入模板JS -->
 <script type="text/javascript" src="templet.js"></script>
 <!-- 引入页面JS -->
 <script type="text/javascript" src="index.js"></script>
+<!-- 引入drag -->
+<script type="text/javascript" src="drag.js"></script>
 <script>
-  Drag.createDrag('el-dialog').enable();
+  /** dialog 组件拖拽实现 */
+  new Drag('el-dialog').enable();
 </script>
 </html>

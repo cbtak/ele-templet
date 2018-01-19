@@ -114,6 +114,20 @@ body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
 .ref-table--multiple-selection .is-leaf .cell .el-checkbox {
 }
 
+/** 
+ * dialog 显示位置默认实现：margin-top: 15vh; position: relative; margin: 0 auto 50px;  
+ * 因使用margin属性实现，在增加拖拽功能时会错位影响
+ * 此处使用top left 等属性重写样式实现，以消除影响
+ */
+.el-dialog {
+	margin-top: 0px !important;
+	top: 15vh;
+    left: 50%;
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+	position: absolute;
+}
+
 .el-dialog__header,.el-dialog__footer {
     cursor:move;
 }

@@ -1,22 +1,26 @@
 ﻿/*******************************************/
-/*             自定义扩展样式              */
+/*             1. 自定义扩展样式             */
+/*             2. 重写element-ui样式        */
 /*******************************************/
+
 /** body 样式 */
 body {
-	padding: 0px;
-	/*margin: 0 5px; */
+    padding: 0px;
+    /*margin: 0 5px; */
 }
-/** 隐藏 */
+
+/** 隐藏样式 */
 .hide {
     display: none;
 }
+
 /** 打印样式 */
-@media print{
-    .no-print{
-        display:none
+@media print {
+    .no-print {
+        display: none
     }
     .print {
-        display:block;
+        display: block;
     }
 }
 
@@ -26,43 +30,128 @@ body::-webkit-scrollbar-track-piece, div::-webkit-scrollbar-track-piece {
 }
 body::-webkit-scrollbar, div::-webkit-scrollbar {
     width: 10px;
-    height:10px;
+    height: 10px;
 }
 body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
     /**background: #99a9bf;*/
-    background: skyBlue ;
+    background: skyBlue;
     border-radius: 20px;
 }
 
-
 /** 浮动:居左 */
 .left {
-	float: left;
-}
-/** 浮动:居右 */
-.right {
-	float: right;
-}
-/** 工具栏样式 */
-.toolbar {
-	min-height: 40px;
-}
-/** 显示工具栏按钮样式 */
-.show-toolbar-icon {
-	position:absolute;
-	top: -4px;
-	right: 50%;
-	color: gray;
-	font-size: 22px;
-	cursor:pointer;
-	transform: rotate(90deg);
-	z-index: 999;
-}
-/** 参照控件操作按钮内边距样式 */
-.ref-input > .el-input-group__append {
-	padding: 0 12px !important;
+    float: left;
 }
 
+/** 浮动:居右 */
+.right {
+    float: right;
+}
+
+/** 工具栏样式 */
+.toolbar {
+    min-height: 40px;
+}
+
+/** 显示工具栏按钮样式 */
+.show-toolbar-icon {
+    position: absolute;
+    top: -4px;
+    right: 50%;
+    color: gray;
+    font-size: 22px;
+    cursor: pointer;
+    transform: rotate(90deg);
+    z-index: 999;
+}
+
+/** 布局容器相关样式 ************************************************************/
+
+/** 布局容器上边距样式重写 */
+.el-container {
+    /*margin-top: -1px;*/
+}
+
+/** 布局容器头部高度样式重写（默认为60px） */
+.el-container .el-header {
+    /*padding: 0px;*/
+}
+
+/** 布局容器头部、内容、页脚内边距样式重写 */
+.el-header, .el-main, .el-footer {
+    height: 100% !important;
+    padding: 0px 0px 5px 0px !important;
+}
+
+/** 卡片控件内边距样式重写 */
+.el-card__header {
+    padding: 5px 5px;
+}
+
+/** Dialog 组件内边距及行高样式重写 */
+.el-dialog__body {
+    line-height: 24px;
+    padding: 0px 10px 10px 10px !important;
+}
+
+/** dialog 相关样式 ************************************************************/
+
+/**
+ * dialog 显示位置默认实现：margin-top: 15vh; position: relative; margin: 0 auto 50px;
+ * 因使用margin属性实现，在增加拖拽功能时会错位影响
+ * 此处使用top left 等属性重写样式实现，以消除影响
+ */
+.el-dialog {
+    margin-top: 0px !important;
+    top: 15vh;
+    left: 50%;
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    position: absolute;
+}
+
+/** dialog 头部及底部鼠标样式 */
+.el-dialog__header, .el-dialog__footer {
+    cursor: move;
+}
+
+/** 表格相关样式 ************************************************************/
+
+/** 表格列头样式重写 */
+.el-table th {
+    padding: 0px;
+    height: 35px !important;
+}
+
+/** 表格单元格样式重写 */
+.el-table td {
+    padding: 0px;
+    height: 28px !important;
+}
+
+/** 表格单元格内容超出时不换行 */
+.el-table th > .cell, .el-table td > .cell {
+    white-space: nowrap !important;
+}
+
+/** 表格列头背景及内容颜色样式重写 */
+.el-table__footer-wrapper thead div,
+.el-table__header-wrapper thead th,
+.el-table__header-wrapper thead div,
+.el-table__fixed-header-wrapper thead th
+{
+    background-color: #eef1f6;
+    color: #1f2d3d;
+}
+
+/** 表格边框样式重写 */
+.el-table--border td,
+.el-table--border th {
+    border-right: 1px solid #dfe6ec !important;
+    border-bottom: 1px solid #dfe6ec !important;
+}
+
+/** 参照相关样式 ************************************************************/
 
 /** 参照弹出框样式 */
 .ref-dialog {
@@ -72,126 +161,127 @@ body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
 .ref-dialog > .el-dialog > .el-dialog__header {
     padding: 10px 10px 5px !important;
 }
+
 /** 参照弹出框body内边距样式 */
 .ref-dialog > .el-dialog > .el-dialog__body {
     padding: 0px 10px !important;
 }
+
 /** 参照弹出框footer内边距样式 */
 .ref-dialog > .el-dialog > .el-dialog__footer {
     padding: 10px !important;
 }
 
 /** 参照弹出框footer区域按钮间距样式 */
-.ref-dialog > .el-dialog > .el-dialog__footer > .dialog-footer > .el-button+.el-button {
+.ref-dialog > .el-dialog > .el-dialog__footer > .dialog-footer > .el-button + .el-button {
     margin-left: 5px;
 }
 
-/** 表格列头样式重写 */
-.el-table th {
-	padding : 0px;
-    height : 35px !important;
-}
-/** 表格单元格样式重写 */
-.el-table td {
-	padding : 0px;
-    height : 28px !important;
+/** 参照控件样式 */
+.ref-input {
 }
 
-/** 表格单元格内容超出时不换行 */
-.el-table th>.cell, .el-table td>.cell {
-	white-space: nowrap !important;
+/** 参照控件操作按钮内边距样式 */
+.ref-input > .el-input-group__append {
+    padding: 0 12px !important;
 }
 
 /** 参照框表格样式 */
 .ref-table {
-} 
+}
 
 /** 参照框表格单选时选择列列头样式 */
 .ref-table--single-selection .is-leaf .cell .el-checkbox {
     display: none !important;
 }
+
 /** 参照框表格多选时选择列列头样式 */
 .ref-table--multiple-selection .is-leaf .cell .el-checkbox {
 }
 
-/** 
- * dialog 显示位置默认实现：margin-top: 15vh; position: relative; margin: 0 auto 50px;  
- * 因使用margin属性实现，在增加拖拽功能时会错位影响
- * 此处使用top left 等属性重写样式实现，以消除影响
- */
-.el-dialog {
-	margin-top: 0px !important;
-	top: 15vh;
-    left: 50%;
-    -ms-transform: translateX(-50%);
-    transform: translateX(-50%);
-	position: absolute;
+
+
+/** 表格编辑相关样式 ************************************************************/
+
+/** 表格编辑时参照控件的操作按钮样式重写 */
+.edit-table .el-input-group__append,
+.edit-table .el-input-group__prepend {
+    border: 0px;
+    background: #fff;
+    /*padding: 0px !important;*/
+    margin: -30px;
 }
 
-.el-dialog__header,.el-dialog__footer {
-    cursor:move;
+/** 表格编辑时参照控件的操作按钮样式重写 */
+.edit-table .el-input-group__append button.el-button {
+    padding: 0px;
 }
 
-.el-pagination {
-    padding: 2px 5px 0px 5px;
+/** 表格编辑时参照控件的清除控件样式重写 */
+.edit-table .ref-input .el-input__suffix {
+    transform: translateX(-18px) !important;
 }
 
-/*******************************************/
-/*             重写element-ui样式          */
-/*******************************************/
-
-/** 布局容器上边距样式重写 */
-.el-container {
-	/*margin-top: -1px;*/
+/** 表格编辑 */
+.edit-table {
 }
 
-/** 布局容器头部高度样式重写（默认为60px） */
-.el-container .el-header {
-	/*padding: 0px;*/
+/** 表格编辑时单元格内边距样式重写 */
+.edit-table td .cell, .edit-table th .cell {
+    padding: 0px !important;
+    text-align: center;
 }
 
-/** 布局容器头部、内容、页脚内边距样式重写 */
-.el-header, .el-main, .el-footer {
-	height: 100% !important;
-	padding: 0px 0px 5px 0px!important;
+/** 表格编辑时单元格编辑控件样式重写 */
+.edit-table input, .edit-table textarea {
+    border: 0px;
+    border-radius: 0px;
+    margin: 0px;
+    min-height: 31px;
 }
 
-/** 卡片控件内边距样式重写 */
-.el-card__header {
-	padding: 5px 5px;
-}
+/** 表单相关样式 ************************************************************/
 
 /** 表单项目底部外边距重写 */
 .el-form-item {
-	margin-bottom: 5px !important;
-	margin-right: 5px !important;
+    margin-bottom: 5px !important;
+    margin-right: 5px !important;
 }
 
 /** 表单项目label内边距及溢出样式重写 */
 .el-form-item__label {
-	padding: 0 8px 0 0 !important;
-	text-overflow: ellipsis;
+    padding: 0 8px 0 0 !important;
+    text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
 }
 
 /** 表单项目行高重写 */
 .el-form-item__label, .el-form-item__content {
-	line-height: 38px;
+    line-height: 38px;
 }
 
-/** input控件内边距重写 */
+/** input控件(公共样式)内边距重写 */
 .el-input__inner {
-	padding: 0 5px;
+    padding: 0 5px;
 }
+
+/** 按钮文字与图标(公共样式)的间隔距离样式重写 */
+.el-button > span {
+    margin-left: 0px !important;
+}
+
+/** input控件(公共样式)禁用时的样式重写 */
+.el-input.is-disabled .el-input__inner {
+    background-color: #f6f6f6;
+    border-color: #e4e7ed;
+    color: #7d7d7d;
+    cursor: not-allowed;
+}
+
 /** cascader 组件 label 内边距重写 */
 .el-cascader__label {
-	padding: 0 25px 0 5px;
-}
-/** Dialog 组件内边距及行高样式重写 */
-.el-dialog__body {
-	line-height: 24px;
-	padding: 0px 10px 10px 10px !important;
+    padding: 0 25px 0 5px;
 }
 
 /** radio 组件 label 左内边距样式重写 */
@@ -200,26 +290,23 @@ body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
 }
 
 /** radio 组件左外边距样式重写 */
-.el-radio+.el-radio {
+.el-radio + .el-radio {
     margin-left: 8px;
 }
+
 /** radio group 组件左外边距样式重写 */
 .el-radio-group {
-	margin-left: 0px !important;
+    margin-left: 0px !important;
 }
 
 /** checkbox 组件 label 左外边距样式重写 */
 .el-checkbox__label {
     padding-left: 4px;
 }
-/** checkbox 组件项目左外边距样式重写 */
-.el-checkbox+.el-checkbox {
-    margin-left: 8px;
-}
 
-/** rate 组件宽度样式重写 */
-.el-rate__item {
-    width: 21px !important;
+/** checkbox 组件项目左外边距样式重写 */
+.el-checkbox + .el-checkbox {
+    margin-left: 8px;
 }
 
 /** rate 组件行高样式重写 */
@@ -227,57 +314,51 @@ body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
     line-height: 1.5;
 }
 
+/** rate 组件宽度样式重写 */
+.el-rate__item {
+    width: 21px !important;
+}
+
 /** 时间范围组件选择时删除icon错位，重写样式修正 */
 .el-range__close-icon {
-	position: absolute;
+    position: absolute;
     right: 5px;
     top: 0px;
 }
 
 /** 时间范围组件选择时内容折行，重写样式修正 */
 .el-date-editor--timerange, .el-date-editor--daterange, .el-date-editor--datetimerange {
-	padding-right: 20px !important;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
+    padding-right: 20px !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 /** daterange、datetimerange 弹出时间选择器时位置偏移样式修正 */
 .el-date-picker__editor-wrap > .el-time-panel,
 .el-date-range-picker__time-picker-wrap > .el-time-panel {
-	margin-left: -21px;
+    margin-left: -21px;
 }
 
 /** color-picker 组件宽度样式重写 */
 .el-color-picker__trigger {
-	width: 100% !important;
+    width: 100% !important;
 }
-
-
-.el-input.is-disabled .el-input__inner {
-    background-color: #f6f6f6;
-    border-color: #e4e7ed;
-    color: #7d7d7d;
-    cursor: not-allowed;
-}
-
+/** 下拉选择多选时内容标签样式重写 */
 .el-select .el-tag {
     margin: 2px 2px 2px 2px;
 }
-
-.el-select > .el-tag--small {
+/** 下拉选择多选时标签(small)样式重写 */
+.el-select .el-tag--small {
+    padding: 0 4px;
     line-height: 20px;
 }
-
+/** 下拉选择多选时标签删除图标样式重写 */
 .el-select .el-tag__close.el-icon-close {
     right: -2px;
 }
 
-.el-select .el-tag--small {
-    padding: 0 4px;
-}
-
-/** 按钮文字与图标的间隔距离样式重写 */
-.el-button > span {
-	    margin-left: 0px !important;
+/** 分页组件内边距样式重写 */
+.el-pagination {
+    padding: 2px 5px 0px 5px;
 }

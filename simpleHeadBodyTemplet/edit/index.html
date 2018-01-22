@@ -1,680 +1,840 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <!-- 引入样式 -->
-  <link rel="stylesheet" href="../../node_modules/element-ui/lib/theme-chalk/index.css">
-  <link rel="stylesheet" type="text/css" href="templet.css">
+    <meta charset="UTF-8">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../../node_modules/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" type="text/css" href="templet.css">
 </head>
 <body>
 <div id="app">
-  
-  <!-- templetView 为模板主视图区域 -->
-  <section id="templetView" v-show="viewModel.display">
 
-    <!-- 显示工具栏按钮（工具栏隐藏时显示） -->
-    <transition name="el-zoom-in-center">
-      <i v-show="!viewModel.toolbar.display" class="el-icon-d-arrow-right show-toolbar-icon" title="显示工具栏" @click="viewModel.toolbar.display = true"></i>
-    </transition>
+    <!-- templetView 为模板主视图区域 -->
+    <section id="templetView" v-show="viewModel.display">
 
-    <!-- 工具栏 -->
-    <transition name="el-zoom-in-top">
-      <el-card v-show="viewModel.toolbar.display" :body-style="{ padding: '5px' }">
-        <el-button-group>
-          <el-button type="primary" :size="viewModel.size" round>新增</el-button>
-          <el-button type="primary" :size="viewModel.size">修改</el-button>
-          <el-button type="warning" :size="viewModel.size" round>保存</el-button>
-          <el-button type="success" :size="viewModel.size" round>刷新</el-button>
-          <el-button type="danger" :size="viewModel.size" round>删除</el-button>
-        </el-button-group>
+        <!-- 显示工具栏按钮（工具栏隐藏时显示） -->
+        <transition name="el-zoom-in-center">
+            <i v-show="!viewModel.toolbar.display" class="el-icon-d-arrow-right show-toolbar-icon" title="显示工具栏"
+               @click="viewModel.toolbar.display = true"></i>
+        </transition>
 
-        <el-dropdown class="right" round @command="handleSettings">
-          <el-button type="primary" :size="viewModel.size" title="设置">
-            设置 <i class="el-icon-caret-bottom el-icon--right"></i>
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="VIEW_SETING">界面设置</el-dropdown-item>
-            <el-dropdown-item command="COLUMN_SETTINGS">表体显示</el-dropdown-item>
-            <el-dropdown-item command="COLUMN_SETTINGS">表尾显示</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <!-- 工具栏 -->
+        <transition name="el-zoom-in-top">
+            <el-card v-show="viewModel.toolbar.display" :body-style="{ padding: '5px' }">
+                <el-button-group>
+                    <el-button type="primary" :size="viewModel.size" round>新增</el-button>
+                    <el-button type="primary" :size="viewModel.size">修改</el-button>
+                    <el-button type="warning" :size="viewModel.size" round>保存</el-button>
+                    <el-button type="success" :size="viewModel.size" round>刷新</el-button>
+                    <el-button type="danger" :size="viewModel.size" round>删除</el-button>
+                </el-button-group>
 
-        <el-button-group class="right" style="margin-right: 10px;">
-          <el-button type="primary" :size="viewModel.size">按钮1</el-button>
-          <el-button type="primary" :size="viewModel.size">按钮2</el-button>
-        </el-button-group>
-      </el-card>
-    </transition>
+                <el-dropdown class="right" round @command="handleSettings">
+                    <el-button type="primary" :size="viewModel.size" title="设置">
+                        设置 <i class="el-icon-caret-bottom el-icon--right"></i>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="VIEW_SETING">界面设置</el-dropdown-item>
+                        <el-dropdown-item command="COLUMN_SETTINGS">表体显示</el-dropdown-item>
+                        <el-dropdown-item command="COLUMN_SETTINGS">表尾显示</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
 
-    <el-container>
-      <transition name="el-zoom-in-top">
-        <el-header v-show="viewModel.head.display">
-          <el-card :body-style="{ padding: '5px' }">
-            <el-form :ref="viewModel.head.form.key"
-                     v-show="viewModel.head.display"
-                     :model="data.dataModel"
-                     :rules="viewModel.head.form.rules"
-                     :inline="viewModel.head.form.inline"
-                     :label-position="viewModel.head.form.label_position"
-                     :label-width="viewModel.head.form.label_width ? viewModel.head.form.label_width + 'px' : null"
-                     :label-suffix="viewModel.head.form.label_suffix"
-                     :show-message="viewModel.head.form.show_message"
-                     :inline-message="viewModel.head.form.inline_message"
-                     :status-icon="viewModel.head.form.status_icon"
-                     :size="viewModel.head.size">
-              <el-form-item v-for="(formItem, $index) in viewModel.head.form.items"
-                            :key="'headForm-' + formItem.key"
-                            v-show="formItem.display"
-                            :prop="formItem.data_key"
-                            :label="formItem.show_label ? formItem.label : null"
-                            :label-width="formItem.item_label_width ? formItem.item_label_width + 'px' : null"
-                            :required="formItem.required"
-                            :rules="formItem.rules"
-                            :error="formItem.error"
-                            :show-message="formItem.show_message"
-                            :inline-message="formItem.inline_message"
-                            :size="viewModel.head.size"
-                            :title="formItem.label">
+                <el-button-group class="right" style="margin-right: 10px;">
+                    <el-button type="primary" :size="viewModel.size">按钮1</el-button>
+                    <el-button type="primary" :size="viewModel.size">按钮2</el-button>
+                </el-button-group>
+            </el-card>
+        </transition>
 
-                <!-- 类型：text、number、textarea、date、month、week、datetime、datetime-local、time、email、url、range、search、color (忽略属性：size form label) -->
-                <el-input v-if="['text','number','textarea','date','month','week','datetime','datetime-local','time','email','url','range','search','color'].indexOf(formItem.type) != -1"
-                          :type="formItem.type"
-                          v-model="data.dataModel[formItem.data_key]"
-                          :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                          :name="formItem.name"
-                          :value="formItem.value"
-                          :minlength="formItem.minlength"
-                          :maxlength="formItem.maxlength"
-                          :min="formItem.min"
-                          :max="formItem.max"
-                          :step="formItem.step"
-                          :prefix-icon="formItem.prefix_icon"
-                          :suffix-icon="formItem.suffix_icon"
-                          :auto-complete="formItem.auto_complete"
-                          :autofocus="formItem.autofocus"
-                          :tabindex="formItem.tabindex"
-                          :readonly="formItem.readonly"
-                          :disabled="formItem.disabled"
-                          :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
-                          :rows="formItem.rows"
-                          :resize="formItem.resize"
-                          :autosize="formItem.autosize"
-                          :placeholder="formItem.placeholder"
-                          :class="'input-edit ' + formItem.class"
-                          :style="'min-width:35px;' + (formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
-                          @change="formItem.events.change({data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
-                          @blur="formItem.events.blur({data_key : formItem.data_key, model : formItem, app : _self})"
-                          @focus="formItem.events.focus({data_key : formItem.data_key, model : formItem, app : _self})">
-                </el-input>
+        <el-container>
+            <transition name="el-zoom-in-top">
+                <el-header v-show="viewModel.head.display">
+                    <el-card :body-style="{ padding: '5px' }">
+                        <el-form :ref="viewModel.head.form.key"
+                                 v-show="viewModel.head.display"
+                                 :model="data.dataModel"
+                                 :rules="viewModel.head.form.rules"
+                                 :inline="viewModel.head.form.inline"
+                                 :label-position="viewModel.head.form.label_position"
+                                 :label-width="viewModel.head.form.label_width ? viewModel.head.form.label_width + 'px' : null"
+                                 :label-suffix="viewModel.head.form.label_suffix"
+                                 :show-message="viewModel.head.form.show_message"
+                                 :inline-message="viewModel.head.form.inline_message"
+                                 :status-icon="viewModel.head.form.status_icon"
+                                 :size="viewModel.head.size">
+                            <el-form-item v-for="(formItem, $index) in viewModel.head.form.items"
+                                          :key="'headForm-' + formItem.key"
+                                          v-show="formItem.display"
+                                          :prop="formItem.data_key"
+                                          :label="formItem.show_label ? formItem.label : null"
+                                          :label-width="formItem.item_label_width ? formItem.item_label_width + 'px' : null"
+                                          :required="formItem.required"
+                                          :rules="formItem.rules"
+                                          :error="formItem.error"
+                                          :show-message="formItem.show_message"
+                                          :inline-message="formItem.inline_message"
+                                          :size="viewModel.head.size"
+                                          :title="formItem.label">
 
-                <!-- 类型：scaler (忽略属性：size label) -->
-                <el-input-number v-if="formItem.type == 'scaler'"
-                                 :type="formItem.type"
-                                 v-model="data.dataModel[formItem.data_key]"
-                                 :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                                 :name="formItem.name"
-                                 :value="formItem.value"
-                                 :min="formItem.min"
-                                 :max="formItem.max"
-                                 :step="formItem.step"
-                                 :debounce="formItem.debounce"
-                                 :controls="formItem.controls"
-                                 :controls-position="formItem.controls_position"
-                                 :disabled="formItem.disabled"
-                                 :class="'input-edit ' + formItem.class"
-                                 :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
-                                 @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
-                                 @blur="formItem.events.blur({key : formItem.key, data_key : formItem.data_key, model : formItem, app : _self})"
-                                 @focus="formItem.events.focus({key : formItem.key, data_key : formItem.data_key, model : formItem, app : _self})">
-                </el-input-number>
+                                <!-- 类型：text、number、textarea、date、month、week、datetime、datetime-local、time、email、url、range、search、color (忽略属性：size form label) -->
+                                <el-input
+                                        v-if="['text','number','textarea','date','month','week','datetime','datetime-local','time','email','url','range','search','color'].indexOf(formItem.type) != -1"
+                                        :type="formItem.type"
+                                        v-model="data.dataModel[formItem.data_key]"
+                                        :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                        :name="formItem.name"
+                                        :value="formItem.value"
+                                        :minlength="formItem.minlength"
+                                        :maxlength="formItem.maxlength"
+                                        :min="formItem.min"
+                                        :max="formItem.max"
+                                        :step="formItem.step"
+                                        :prefix-icon="formItem.prefix_icon"
+                                        :suffix-icon="formItem.suffix_icon || ' '"
+                                        :auto-complete="formItem.auto_complete"
+                                        :autofocus="formItem.autofocus"
+                                        :tabindex="formItem.tabindex"
+                                        :readonly="formItem.readonly"
+                                        :disabled="formItem.disabled"
+                                        :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
+                                        :rows="formItem.rows"
+                                        :resize="formItem.resize"
+                                        :autosize="formItem.autosize"
+                                        :placeholder="formItem.placeholder"
+                                        :class="'input-edit ' + formItem.class"
+                                        :style="'min-width:35px;' + (formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
+                                        @change="formItem.events.change({data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
+                                        @blur="formItem.events.blur({data_key : formItem.data_key, model : formItem, app : _self})"
+                                        @focus="formItem.events.focus({data_key : formItem.data_key, model : formItem, app : _self})">
+                                </el-input>
 
-                <!-- 类型：radio (忽略属性：size) -->
-                <el-radio-group v-if="formItem.type == 'radio'"
-                                :type="formItem.type"
-                                v-model="data.dataModel[formItem.data_key]"
-                                :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                                :text-color="formItem.text_color"
-                                :fill="formItem.fill"
-                                :disabled="formItem.disabled"
-                                :class="'input-edit ' + formItem.class"
-                                :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
-                                @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})">
-                  <el-radio v-for="option in formItem.options" 
-                            v-show="option[formItem.option_hide_key] != true"
-                            :key="option[formItem.option_key]"
-                            :label="option[formItem.option_key]" 
-                            :disabled="option[formItem.option_disabled_key]">
-                            {{option[formItem.option_label]}}
-                  </el-radio>
-                </el-radio-group>
+                                <!-- 类型：scaler (忽略属性：size label) -->
+                                <el-input-number v-if="formItem.type == 'scaler'"
+                                                 :type="formItem.type"
+                                                 v-model="data.dataModel[formItem.data_key]"
+                                                 :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                                 :name="formItem.name"
+                                                 :value="formItem.value"
+                                                 :min="formItem.min"
+                                                 :max="formItem.max"
+                                                 :step="formItem.step"
+                                                 :debounce="formItem.debounce"
+                                                 :controls="formItem.controls"
+                                                 :controls-position="formItem.controls_position"
+                                                 :disabled="formItem.disabled"
+                                                 :class="'input-edit ' + formItem.class"
+                                                 :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
+                                                 @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
+                                                 @blur="formItem.events.blur({key : formItem.key, data_key : formItem.data_key, model : formItem, app : _self})"
+                                                 @focus="formItem.events.focus({key : formItem.key, data_key : formItem.data_key, model : formItem, app : _self})">
+                                </el-input-number>
 
-                <!-- 类型：checkbox (忽略属性：size) -->
-                <el-checkbox-group v-if="formItem.type == 'checkbox'"
-                                   :type="formItem.type"
-                                   v-model="data.dataModel[formItem.data_key]"
-                                   :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                                   :min="formItem.min"
-                                   :max="formItem.max"
-                                   :text-color="formItem.text_color"
-                                   :fill="formItem.fill"
-                                   :disabled="formItem.disabled"
-                                   :class="'input-edit ' + formItem.class"
-                                   :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
-                                   @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})">
-                  <el-checkbox v-for="option in formItem.options" 
-                               v-show="option[formItem.option_hide_key] != true"
-                               :key="option[formItem.option_key]"
-                               :label="option[formItem.option_key]"
-                               :disabled="option[formItem.option_disabled_key]">
-                               {{option[formItem.option_label]}}
-                  </el-checkbox>
-                </el-checkbox-group>
+                                <!-- 类型：radio (忽略属性：size) -->
+                                <el-radio-group v-if="formItem.type == 'radio'"
+                                                :type="formItem.type"
+                                                v-model="data.dataModel[formItem.data_key]"
+                                                :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                                :text-color="formItem.text_color"
+                                                :fill="formItem.fill"
+                                                :disabled="formItem.disabled"
+                                                :class="'input-edit ' + formItem.class"
+                                                :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
+                                                @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})">
+                                    <el-radio v-for="option in formItem.options"
+                                              v-show="option[formItem.option_hide_key] != true"
+                                              :key="option[formItem.option_key]"
+                                              :label="option[formItem.option_key]"
+                                              :disabled="option[formItem.option_disabled_key]">
+                                        {{option[formItem.option_label]}}
+                                    </el-radio>
+                                </el-radio-group>
 
-                <!-- 类型：select (忽略属性：size) -->
-                <el-select v-if="formItem.type == 'select'"
-                           :type="formItem.type"
-                           v-model="data.dataModel[formItem.data_key]"
-                           :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                           :name="formItem.name"
-                           :value-key="formItem.select_value_key"
-                           :multiple="formItem.multiple"
-                           :multiple-limit="formItem.multiple_limit"
-                           :collapse-tags="formItem.collapse_tags"
-                           :filterable="formItem.filterable"
-                           :allow-create="formItem.allow_create"
-                           :filter-method="formItem.filter_method"
-                           :remote="formItem.remote"
-                           :remote-method="formItem.remote_method"
-                           :loading="formItem.loading"
-                           :loading-text="formItem.loading_text"
-                           :no-match-text="formItem.no_match_text"
-                           :no-data-text="formItem.no_data_text"
-                           :popper-class="formItem.popper_class"
-                           :reserve-keyword="formItem.reserve_keyword"
-                           :default-first-option="formItem.default_first_option"
-                           :readonly="formItem.readonly"
-                           :disabled="formItem.disabled"
-                           :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
-                           :placeholder="formItem.placeholder"
-                           :class="'input-edit ' + formItem.class"
-                           :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
-                           @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
-                           @visible-change="formItem.events.visibleChange"
-                           @remove-tag="formItem.events.removeTag"
-                           @clear="formItem.events.clear({key : formItem.key, data_key : formItem.data_key, model : formItem, app : _self})"
-                           @blur="formItem.events.blur({key : formItem.key, data_key : formItem.data_key, model : formItem, app : _self})"
-                           @focus="formItem.events.focus({key : formItem.key, data_key : formItem.data_key, model : formItem, app : _self})">
-                  <el-option v-for="option in formItem.options"
-                             v-show="option[formItem.option_hide_key] != true"
-                             :key="option[formItem.option_key]"
-                             :label="option[formItem.option_label]"
-                             :value="option[formItem.option_key]"
-                             :disabled="option[formItem.option_disabled]">
-                  </el-option>
-                </el-select>
+                                <!-- 类型：checkbox (忽略属性：size) -->
+                                <el-checkbox-group v-if="formItem.type == 'checkbox'"
+                                                   :type="formItem.type"
+                                                   v-model="data.dataModel[formItem.data_key]"
+                                                   :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                                   :min="formItem.min"
+                                                   :max="formItem.max"
+                                                   :text-color="formItem.text_color"
+                                                   :fill="formItem.fill"
+                                                   :disabled="formItem.disabled"
+                                                   :class="'input-edit ' + formItem.class"
+                                                   :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
+                                                   @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})">
+                                    <el-checkbox v-for="option in formItem.options"
+                                                 v-show="option[formItem.option_hide_key] != true"
+                                                 :key="option[formItem.option_key]"
+                                                 :label="option[formItem.option_key]"
+                                                 :disabled="option[formItem.option_disabled_key]">
+                                        {{option[formItem.option_label]}}
+                                    </el-checkbox>
+                                </el-checkbox-group>
 
-                <!-- 类型：cascader (忽略属性：size) -->
-                <el-cascader v-if="formItem.type == 'cascader'"
-                             :type="formItem.type"
-                             v-model="data.dataModel[formItem.data_key]"
-                             :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                             :name="formItem.name"
-                             :value="formItem.value"
-                             :options="formItem.options"
-                             :props="formItem.props"
-                             :separator="formItem.separator"
-                             :popper-class="formItem.popper_class"
-                             :expand-trigger="formItem.expand_trigger"
-                             :show-all-levels="formItem.show_all_levels"
-                             :before-filter="formItem.before_filter"
-                             :filterable="true"
-                             :debounce="formItem.debounce"
-                             :change-on-select="formItem.change_on_select"
-                             :readonly="formItem.readonly"
-                             :disabled="formItem.disabled"
-                             :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
-                             :placeholder="formItem.placeholder"
-                             :class="'input-edit ' + formItem.class"
-                             :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
-                             @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
-                             @activeItemChange="formItem.events.activeItemChange">
-                </el-cascader>
+                                <!-- 类型：select (忽略属性：size) -->
+                                <el-select v-if="formItem.type == 'select'"
+                                           :type="formItem.type"
+                                           v-model="data.dataModel[formItem.data_key]"
+                                           :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                           :name="formItem.name"
+                                           :value-key="formItem.select_value_key"
+                                           :multiple="formItem.multiple"
+                                           :multiple-limit="formItem.multiple_limit"
+                                           :collapse-tags="formItem.collapse_tags"
+                                           :filterable="formItem.filterable"
+                                           :allow-create="formItem.allow_create"
+                                           :filter-method="formItem.filter_method"
+                                           :remote="formItem.remote"
+                                           :remote-method="formItem.remote_method"
+                                           :loading="formItem.loading"
+                                           :loading-text="formItem.loading_text"
+                                           :no-match-text="formItem.no_match_text"
+                                           :no-data-text="formItem.no_data_text"
+                                           :popper-class="formItem.popper_class"
+                                           :reserve-keyword="formItem.reserve_keyword"
+                                           :default-first-option="formItem.default_first_option"
+                                           :readonly="formItem.readonly"
+                                           :disabled="formItem.disabled"
+                                           :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
+                                           :placeholder="formItem.placeholder"
+                                           :class="'input-edit ' + formItem.class"
+                                           :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
+                                           @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
+                                           @visible-change="formItem.events.visibleChange"
+                                           @remove-tag="formItem.events.removeTag"
+                                           @clear="formItem.events.clear({key : formItem.key, data_key : formItem.data_key, model : formItem, app : _self})"
+                                           @blur="formItem.events.blur({key : formItem.key, data_key : formItem.data_key, model : formItem, app : _self})"
+                                           @focus="formItem.events.focus({key : formItem.key, data_key : formItem.data_key, model : formItem, app : _self})">
+                                    <el-option v-for="option in formItem.options"
+                                               v-show="option[formItem.option_hide_key] != true"
+                                               :key="option[formItem.option_key]"
+                                               :label="option[formItem.option_label]"
+                                               :value="option[formItem.option_key]"
+                                               :disabled="option[formItem.option_disabled]">
+                                    </el-option>
+                                </el-select>
 
-                <!-- 类型：switch -->
-                <el-switch v-if="formItem.type == 'switch'"
-                           :type="formItem.type"
-                           v-model="data.dataModel[formItem.data_key]"
-                           :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                           :name="formItem.name"
-                           :active-text="formItem.active_text"
-                           :inactive-text="formItem.inactive_text"
-                           :active-value="formItem.active_value"
-                           :inactive-value="formItem.inactive_value"
-                           :active-color="formItem.active_color"
-                           :inactive-color="formItem.inactive_color"
-                           :active-icon-class="formItem.active_icon_class"
-                           :inactive-icon-class="formItem.inactive_icon_class"
-                           :disabled="formItem.disabled"
-                           :width="formItem.width"
-                           :class="'input-edit ' + formItem.class"
-                           :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
-                           @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})">
-                </el-switch>
+                                <!-- 类型：cascader (忽略属性：size) -->
+                                <el-cascader v-if="formItem.type == 'cascader'"
+                                             :type="formItem.type"
+                                             v-model="data.dataModel[formItem.data_key]"
+                                             :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                             :name="formItem.name"
+                                             :value="formItem.value"
+                                             :options="formItem.options"
+                                             :props="formItem.props"
+                                             :separator="formItem.separator"
+                                             :popper-class="formItem.popper_class"
+                                             :expand-trigger="formItem.expand_trigger"
+                                             :show-all-levels="formItem.show_all_levels"
+                                             :before-filter="formItem.before_filter"
+                                             :filterable="true"
+                                             :debounce="formItem.debounce"
+                                             :change-on-select="formItem.change_on_select"
+                                             :readonly="formItem.readonly"
+                                             :disabled="formItem.disabled"
+                                             :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
+                                             :placeholder="formItem.placeholder"
+                                             :class="'input-edit ' + formItem.class"
+                                             :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
+                                             @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
+                                             @activeItemChange="formItem.events.activeItemChange">
+                                </el-cascader>
 
-                <!-- 类型：slider (忽略属性：label) -->
-                <el-slider v-if="formItem.type == 'slider'"
-                           :type="formItem.type"
-                           v-model="data.dataModel[formItem.data_key]"
-                           :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                           :min="formItem.min"
-                           :max="formItem.max"
-                           :step="formItem.step"
-                           :show-input="formItem.show_input"
-                           :show-input-controls="formItem.show_input_controls"
-                           :show-stops="formItem.show_stops"
-                           :show-tooltip="formItem.show_tooltip"
-                           :format-tooltip="formItem.format_tooltip"
-                           :range="formItem.range"
-                           :vertical="formItem.vertical"
-                           :debounce="formItem.debounce"
-                           :disabled="formItem.disabled"
-                           :height="formItem.height"
-                           :class="'input-edit ' + formItem.class"
-                           :style="'margin-left: 5px;' + (formItem.style || '') + (!viewModel.form_auto_width && (formItem.item_width - 5) ? '; width:' + (formItem.item_width - 5) + 'px;' : '')"
-                           @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})">
-                </el-slider>
+                                <!-- 类型：switch -->
+                                <el-switch v-if="formItem.type == 'switch'"
+                                           :type="formItem.type"
+                                           v-model="data.dataModel[formItem.data_key]"
+                                           :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                           :name="formItem.name"
+                                           :active-text="formItem.active_text"
+                                           :inactive-text="formItem.inactive_text"
+                                           :active-value="formItem.active_value"
+                                           :inactive-value="formItem.inactive_value"
+                                           :active-color="formItem.active_color"
+                                           :inactive-color="formItem.inactive_color"
+                                           :active-icon-class="formItem.active_icon_class"
+                                           :inactive-icon-class="formItem.inactive_icon_class"
+                                           :disabled="formItem.disabled"
+                                           :width="formItem.width"
+                                           :class="'input-edit ' + formItem.class"
+                                           :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
+                                           @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})">
+                                </el-switch>
 
-                <!-- 类型：rate -->
-                <el-rate v-if="formItem.type == 'rate'"
-                         :type="formItem.type"
-                         v-model="data.dataModel[formItem.data_key]"
-                         :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                         :max="formItem.max"
-                         :allow-half="formItem.allow_half"
-                         :low-threshold="formItem.low_threshold"
-                         :high-threshold="formItem.high_threshold"
-                         :colors="formItem.colors"
-                         :void-color="formItem.void_color"
-                         :disabled-void-color="formItem.disabled_void_color"
-                         :icon-classes="formItem.icon_classes"
-                         :void-icon-class="formItem.void_icon_class"
-                         :disabled-void-icon-class="formItem.disabled_void_icon_class"
-                         :show-text="formItem.show_text"
-                         :show-score="formItem.show_score"
-                         :text-color="formItem.text_color"
-                         :texts="formItem.texts"
-                         :score-template="formItem.score_template"
-                         :disabled="formItem.disabled"
-                         :placeholder="formItem.placeholder"
-                         :class="'input-edit ' + formItem.class"
-                         :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
-                         @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})">
-                </el-rate>
+                                <!-- 类型：slider (忽略属性：label) -->
+                                <el-slider v-if="formItem.type == 'slider'"
+                                           :type="formItem.type"
+                                           v-model="data.dataModel[formItem.data_key]"
+                                           :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                           :min="formItem.min"
+                                           :max="formItem.max"
+                                           :step="formItem.step"
+                                           :show-input="formItem.show_input"
+                                           :show-input-controls="formItem.show_input_controls"
+                                           :show-stops="formItem.show_stops"
+                                           :show-tooltip="formItem.show_tooltip"
+                                           :format-tooltip="formItem.format_tooltip"
+                                           :range="formItem.range"
+                                           :vertical="formItem.vertical"
+                                           :debounce="formItem.debounce"
+                                           :disabled="formItem.disabled"
+                                           :height="formItem.height"
+                                           :class="'input-edit ' + formItem.class"
+                                           :style="'margin-left: 5px;' + (formItem.style || '') + (!viewModel.form_auto_width && (formItem.item_width - 5) ? '; width:' + (formItem.item_width - 5) + 'px;' : '')"
+                                           @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})">
+                                </el-slider>
 
-                <!-- 类型：time-select (忽略属性：size) -->
-                <el-time-select v-if="formItem.type == 'time-select'"
-                                :type="formItem.type"
-                                v-model="data.dataModel[formItem.data_key]"
-                                :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                                :name="formItem.name"
-                                :value="formItem.value"
-                                :default-value="formItem.default_value"
-                                :editable="formItem.editable"
-                                :is-range="formItem.is_range"
-                                :arrow-control="formItem.arrow_control"
-                                :align="formItem.align"
-                                :popper-class="formItem.popper_class"
-                                :picker-options="formItem.picker_options"
-                                :range-separator="formItem.range_separator"
-                                :value-format="formItem.value_format"
-                                :readonly="formItem.readonly"
-                                :disabled="formItem.disabled"
-                                :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
-                                :start-placeholder="formItem.start_placeholder"
-                                :end-placeholder="formItem.end_placeholder"
-                                :placeholder="formItem.placeholder"
-                                :class="'input-edit ' + formItem.class"
-                                :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
-                                @change="formItem.events.change({data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
-                                @blur="formItem.events.blur({data_key : formItem.data_key, model : formItem, app : _self})"
-                                @focus="formItem.events.focus({data_key : formItem.data_key, model : formItem, app : _self})">
-                </el-time-select>
+                                <!-- 类型：rate -->
+                                <el-rate v-if="formItem.type == 'rate'"
+                                         :type="formItem.type"
+                                         v-model="data.dataModel[formItem.data_key]"
+                                         :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                         :max="formItem.max"
+                                         :allow-half="formItem.allow_half"
+                                         :low-threshold="formItem.low_threshold"
+                                         :high-threshold="formItem.high_threshold"
+                                         :colors="formItem.colors"
+                                         :void-color="formItem.void_color"
+                                         :disabled-void-color="formItem.disabled_void_color"
+                                         :icon-classes="formItem.icon_classes"
+                                         :void-icon-class="formItem.void_icon_class"
+                                         :disabled-void-icon-class="formItem.disabled_void_icon_class"
+                                         :show-text="formItem.show_text"
+                                         :show-score="formItem.show_score"
+                                         :text-color="formItem.text_color"
+                                         :texts="formItem.texts"
+                                         :score-template="formItem.score_template"
+                                         :disabled="formItem.disabled"
+                                         :placeholder="formItem.placeholder"
+                                         :class="'input-edit ' + formItem.class"
+                                         :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
+                                         @change="formItem.events.change({key : formItem.key, data_key : formItem.data_key, value : $event, model : formItem, app : _self})">
+                                </el-rate>
 
-                <!-- 类型：time-picker (忽略属性：size) -->
-                <el-time-picker v-if="formItem.type == 'time-picker'"
-                                :type="formItem.type"
-                                v-model="data.dataModel[formItem.data_key]"
-                                :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                                :name="formItem.name"
-                                :value="formItem.value"
-                                :default-value="formItem.default_value"
-                                :editable="formItem.editable"
-                                :is-range="formItem.is_range"
-                                :arrow-control="formItem.arrow_control"
-                                :align="formItem.align"
-                                :popper-class="formItem.popper_class"
-                                :picker-options="formItem.picker_options"
-                                :range-separator="formItem.range_separator"
-                                :value-format="formItem.value_format"
-                                :unlink-panels="formItem.unlink_panels"
-                                :readonly="formItem.readonly"
-                                :disabled="formItem.disabled"
-                                :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
-                                :start-placeholder="formItem.start_placeholder"
-                                :end-placeholder="formItem.end_placeholder"
-                                :placeholder="formItem.placeholder"
-                                :class="'input-edit ' + formItem.class"
-                                :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
-                                @change="formItem.events.change({data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
-                                @blur="formItem.events.blur({data_key : formItem.data_key, model : formItem, app : _self})"
-                                @focus="formItem.events.focus({data_key : formItem.data_key, model : formItem, app : _self})">
-                </el-time-picker>
+                                <!-- 类型：time-select (忽略属性：size) -->
+                                <el-time-select v-if="formItem.type == 'time-select'"
+                                                :type="formItem.type"
+                                                v-model="data.dataModel[formItem.data_key]"
+                                                :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                                :name="formItem.name"
+                                                :value="formItem.value"
+                                                :default-value="formItem.default_value"
+                                                :editable="formItem.editable"
+                                                :is-range="formItem.is_range"
+                                                :arrow-control="formItem.arrow_control"
+                                                :align="formItem.align"
+                                                :popper-class="formItem.popper_class"
+                                                :picker-options="formItem.picker_options"
+                                                :range-separator="formItem.range_separator"
+                                                :value-format="formItem.value_format"
+                                                :readonly="formItem.readonly"
+                                                :disabled="formItem.disabled"
+                                                :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
+                                                :start-placeholder="formItem.start_placeholder"
+                                                :end-placeholder="formItem.end_placeholder"
+                                                :placeholder="formItem.placeholder"
+                                                :class="'input-edit ' + formItem.class"
+                                                :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
+                                                @change="formItem.events.change({data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
+                                                @blur="formItem.events.blur({data_key : formItem.data_key, model : formItem, app : _self})"
+                                                @focus="formItem.events.focus({data_key : formItem.data_key, model : formItem, app : _self})">
+                                </el-time-select>
 
-                <!-- 类型：date-picker (忽略属性：size) -->
-                <el-date-picker v-if="formItem.type == 'date-picker'"
-                                :type="formItem.date_type"
-                                v-model="data.dataModel[formItem.data_key]"
-                                :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                                :name="formItem.name"
-                                :value="formItem.value"
-                                :default-value="formItem.default_value"
-                                :editable="formItem.editable"
-                                :align="formItem.align"
-                                :popper-class="formItem.popper_class"
-                                :picker-options="formItem.picker_options"
-                                :range-separator="formItem.range_separator"
-                                :format="formItem.format"
-                                :value-format="formItem.value_format"
-                                :unlink-panels="formItem.unlink_panels"
-                                :readonly="formItem.readonly"
-                                :disabled="formItem.disabled"
-                                :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
-                                :start-placeholder="formItem.start_placeholder"
-                                :end-placeholder="formItem.end_placeholder"
-                                :placeholder="formItem.placeholder"
-                                :class="'input-edit ' + formItem.class"
-                                :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
-                                @change="formItem.events.change({data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
-                                @blur="formItem.events.blur({data_key : formItem.data_key, model : formItem, app : _self})"
-                                @focus="formItem.events.focus({data_key : formItem.data_key, model : formItem, app : _self})">
+                                <!-- 类型：time-picker (忽略属性：size) -->
+                                <el-time-picker v-if="formItem.type == 'time-picker'"
+                                                :type="formItem.type"
+                                                v-model="data.dataModel[formItem.data_key]"
+                                                :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                                :name="formItem.name"
+                                                :value="formItem.value"
+                                                :default-value="formItem.default_value"
+                                                :editable="formItem.editable"
+                                                :is-range="formItem.is_range"
+                                                :arrow-control="formItem.arrow_control"
+                                                :align="formItem.align"
+                                                :popper-class="formItem.popper_class"
+                                                :picker-options="formItem.picker_options"
+                                                :range-separator="formItem.range_separator"
+                                                :value-format="formItem.value_format"
+                                                :unlink-panels="formItem.unlink_panels"
+                                                :readonly="formItem.readonly"
+                                                :disabled="formItem.disabled"
+                                                :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
+                                                :start-placeholder="formItem.start_placeholder"
+                                                :end-placeholder="formItem.end_placeholder"
+                                                :placeholder="formItem.placeholder"
+                                                :class="'input-edit ' + formItem.class"
+                                                :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
+                                                @change="formItem.events.change({data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
+                                                @blur="formItem.events.blur({data_key : formItem.data_key, model : formItem, app : _self})"
+                                                @focus="formItem.events.focus({data_key : formItem.data_key, model : formItem, app : _self})">
+                                </el-time-picker>
 
-                </el-date-picker>
+                                <!-- 类型：date-picker (忽略属性：size) -->
+                                <el-date-picker v-if="formItem.type == 'date-picker'"
+                                                :type="formItem.date_type"
+                                                v-model="data.dataModel[formItem.data_key]"
+                                                :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                                :name="formItem.name"
+                                                :value="formItem.value"
+                                                :default-value="formItem.default_value"
+                                                :editable="formItem.editable"
+                                                :align="formItem.align"
+                                                :popper-class="formItem.popper_class"
+                                                :picker-options="formItem.picker_options"
+                                                :range-separator="formItem.range_separator"
+                                                :format="formItem.format"
+                                                :value-format="formItem.value_format"
+                                                :unlink-panels="formItem.unlink_panels"
+                                                :readonly="formItem.readonly"
+                                                :disabled="formItem.disabled"
+                                                :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
+                                                :start-placeholder="formItem.start_placeholder"
+                                                :end-placeholder="formItem.end_placeholder"
+                                                :placeholder="formItem.placeholder"
+                                                :class="'input-edit ' + formItem.class"
+                                                :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
+                                                @change="formItem.events.change({data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
+                                                @blur="formItem.events.blur({data_key : formItem.data_key, model : formItem, app : _self})"
+                                                @focus="formItem.events.focus({data_key : formItem.data_key, model : formItem, app : _self})">
 
-                <!-- 类型：color-picker (忽略属性：size) -->
-                <el-color-picker  v-if="formItem.type == 'color-picker'"
-                                  :type="formItem.date_type"
-                                  v-model="data.dataModel[formItem.data_key]"
-                                  :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                                  :name="formItem.name"
-                                  :show-alpha="formItem.show_alpha"
-                                  :default-value="formItem.default_value"
-                                  :color-format="formItem.color_format"
-                                  :popper-class="formItem.popper_class"
-                                  :readonly="formItem.readonly"
-                                  :disabled="formItem.disabled"
-                                  :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
-                                  :class="'input-edit ' + formItem.class"
-                                  :style="'min-width:35px;' + (formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
-                                  @change="formItem.events.change({data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
-                                  @active-change="formItem.events.activechange">
-                  </el-color-picker>
+                                </el-date-picker>
 
-                  <!-- 类型：ref (忽略属性：size form label)-->
-                  <el-input v-if="formItem.type == 'ref'"
-                          :type="formItem.type"
-                          v-model="data.dataModel[formItem.data_key]"
-                          :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
-                          :name="formItem.name"
-                          :value="formItem.value"
-                          :minlength="formItem.minlength"
-                          :maxlength="formItem.maxlength"
-                          :min="formItem.min"
-                          :max="formItem.max"
-                          :step="formItem.step"
-                          :prefix-icon="formItem.prefix_icon"
-                          :suffix-icon="formItem.suffix_icon"
-                          :auto-complete="formItem.auto_complete"
-                          :autofocus="formItem.autofocus"
-                          :tabindex="formItem.tabindex"
-                          :readonly="formItem.readonly"
-                          :disabled="formItem.disabled"
-                          :clearable="formItem.clearable && !formItem.disabled"
-                          :rows="formItem.rows"
-                          :resize="formItem.resize"
-                          :autosize="formItem.autosize"
-                          :placeholder="formItem.placeholder"
-                          :class="'input-edit ref-input ' + formItem.class"
-                          :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
-                          @change="formItem.events.change({data_key : formItem.data_key, value : $event, model : formItem, app : _self})">
-                          <el-button slot="append" icon="el-icon-search" @click="formItem.events.showRefModel({model : formItem, app : _self})"></el-button>
-                </el-input>
-                
+                                <!-- 类型：color-picker (忽略属性：size) -->
+                                <el-color-picker v-if="formItem.type == 'color-picker'"
+                                                 :type="formItem.date_type"
+                                                 v-model="data.dataModel[formItem.data_key]"
+                                                 :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                                 :name="formItem.name"
+                                                 :show-alpha="formItem.show_alpha"
+                                                 :default-value="formItem.default_value"
+                                                 :color-format="formItem.color_format"
+                                                 :popper-class="formItem.popper_class"
+                                                 :readonly="formItem.readonly"
+                                                 :disabled="formItem.disabled"
+                                                 :clearable="formItem.clearable && !formItem.readonly && !formItem.disabled"
+                                                 :class="'input-edit ' + formItem.class"
+                                                 :style="'min-width:35px;' + (formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
+                                                 @change="formItem.events.change({data_key : formItem.data_key, value : $event, model : formItem, app : _self})"
+                                                 @active-change="formItem.events.activechange">
+                                </el-color-picker>
 
-              </el-form-item>
-            </el-form>
-          </el-card>
-        </el-header>
-      </transition>
-
-      <transition name="el-zoom-in-top">
-        <el-main v-show="viewModel.body.display">
-          <el-card :body-style="{ padding: '0px' }">
-            <div slot="header">
-              <span>明细列表</span>
-            </div>
-            <div>
-
-              <el-table :data="data.dataModel.body" style="width: 100%">
-                <el-table-column prop="date" label="日期" width="180"></el-table-column>
-                <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-                <el-table-column prop="age" label="年龄" width="180"></el-table-column>
-                <el-table-column prop="remark" label="备注"></el-table-column>
-              </el-table>
+                                <!-- 类型：ref (忽略属性：size form label)-->
+                                <el-input v-if="formItem.type == 'ref'"
+                                          :type="formItem.type"
+                                          v-model="data.dataModel[formItem.data_key]"
+                                          :title="formItem.title({value: data.dataModel[formItem.data_key], itemModel : formItem})"
+                                          :name="formItem.name"
+                                          :value="formItem.value"
+                                          :minlength="formItem.minlength"
+                                          :maxlength="formItem.maxlength"
+                                          :min="formItem.min"
+                                          :max="formItem.max"
+                                          :step="formItem.step"
+                                          :prefix-icon="formItem.prefix_icon"
+                                          :suffix-icon="formItem.suffix_icon"
+                                          :auto-complete="formItem.auto_complete"
+                                          :autofocus="formItem.autofocus"
+                                          :tabindex="formItem.tabindex"
+                                          :readonly="formItem.readonly"
+                                          :disabled="formItem.disabled"
+                                          :clearable="formItem.clearable && !formItem.disabled"
+                                          :rows="formItem.rows"
+                                          :resize="formItem.resize"
+                                          :autosize="formItem.autosize"
+                                          :placeholder="formItem.placeholder"
+                                          :class="'input-edit ref-input ' + formItem.class"
+                                          :style="(formItem.style || '') + (!viewModel.form_auto_width && formItem.item_width ? '; width:' + formItem.item_width + 'px;' : '')"
+                                          @change="formItem.events.change({data_key : formItem.data_key, value : $event, model : formItem, app : _self})">
+                                    <el-button slot="append" icon="el-icon-search"
+                                               @click="formItem.events.showRefModel({model : formItem, app : _self})"></el-button>
+                                </el-input>
 
 
-            </div>
-          </el-card>
-        </el-main>
-      </transition>
+                            </el-form-item>
+                        </el-form>
+                    </el-card>
+                </el-header>
+            </transition>
+
+            <transition name="el-zoom-in-top">
+                <el-main v-show="viewModel.body.display">
+                    <el-card :body-style="{ padding: '0px' }">
+                        <div slot="header">
+                            <span>明细列表</span>
+                        </div>
+                        <el-table ref="bodyTable"
+                                  :data="data.dataModel.body"
+                                  :height="viewModel.body.bodyModel.height"
+                                  :max-height="viewModel.body.bodyModel.max_height"
+                                  :stripe="viewModel.body.bodyModel.stripe"
+                                  :border="viewModel.body.bodyModel.border"
+                                  :size="viewModel.size"
+                                  :fit="viewModel.body.bodyModel.fit"
+                                  :show-header="viewModel.body.bodyModel.show_header"
+                                  :highlight-current-row="viewModel.body.bodyModel.highlight_current_row"
+                                  :current-row-key="viewModel.body.bodyModel.current_row_key"
+                                  :row-class-name="viewModel.body.bodyModel.row_class_name"
+                                  :row-style="viewModel.body.bodyModel.row_style"
+                                  :cell-class-name="viewModel.body.bodyModel.cell_class_name"
+                                  :cell-style="viewModel.body.bodyModel.cell_style"
+                                  :header-row-class-name="viewModel.body.bodyModel.header_row_class_name"
+                                  :header-row-style="viewModel.body.bodyModel.header_row_style"
+                                  :header-cell-class-name="viewModel.body.bodyModel.header_cell_class_name"
+                                  :header-cell-style="viewModel.body.bodyModel.header_cell_style"
+                                  :row-key="viewModel.body.bodyModel.row_key"
+                                  :empty-text="viewModel.body.bodyModel.empty_text"
+                                  :default-expand-all="viewModel.body.bodyModel.default_expand_all"
+                                  :expand-row-keys="viewModel.body.bodyModel.expand_row_keys"
+                                  :default-sort="viewModel.body.bodyModel.default_sort"
+                                  :tooltip-effect="viewModel.body.bodyModel.tooltip_effect"
+                                  :show-summary="viewModel.body.bodyModel.show_summary"
+                                  :sum-text="viewModel.body.bodyModel.sum_text"
+                                  :summary-method="viewModel.body.bodyModel.summary_method"
+                                  :span-method="viewModel.body.bodyModel.span_method"
+                                  class="edit-table"
+                                  style="viewModel.body.bodyModel.width: 100%"
+
+                                  @select="viewModel.body.bodyModel.events.select"
+                                  @select-all="viewModel.body.bodyModel.events.selectAll"
+                                  @selection-change="viewModel.body.bodyModel.events.selectionChange"
+                                  @cell-mouse-enter="viewModel.body.bodyModel.events.cellMouseEnter"
+                                  @cell-mouse-leave="viewModel.body.bodyModel.events.cellMouseLeave"
+                                  @cell-click="viewModel.body.bodyModel.events.cellClick"
+                                  @cell-dblclick="viewModel.body.bodyModel.events.cellDblclick"
+                                  @row-click="viewModel.body.bodyModel.events.rowClick"
+                                  @row-contextmenu="viewModel.body.bodyModel.events.rowContextmenu"
+                                  @row-dblclick="viewModel.body.bodyModel.events.rowDblclick"
+                                  @header-click="viewModel.body.bodyModel.events.headerClick"
+                                  @sort-change="viewModel.body.bodyModel.events.sortChange"
+                                  @filter-change="viewModel.body.bodyModel.events.filterChange"
+                                  @current-change="viewModel.body.bodyModel.events.currentChange"
+                                  @header-dragend="viewModel.body.bodyModel.events.headerDragend"
+                                  @expand-change="viewModel.body.bodyModel.events.expandChange">
+
+                            <el-table-column type="selection" fix v-if="viewModel.body.bodyModel.show_selection"
+                                             :fixed="true" :width="40"></el-table-column>
+                            <el-table-column type="index" v-if="viewModel.body.bodyModel.show_index" :fixed="true"
+                                             :width="40"></el-table-column>
+                            <el-table-column v-for="column in viewModel.body.bodyModel.items"
+                                             :type="column.column_type"
+                                             :index="column.index"
+                                             :column-key="column.column_key"
+                                             :label="column.label"
+                                             :prop="column.data_key"
+                                             :width="column.width"
+                                             :min-width="column.min_width"
+                                             :fixed="column.fixed"
+                                             :render-header="column.render_header"
+                                             :sortable="column.sortable"
+                                             :sort-method="column.sort_method"
+                                             :sort-by="column.sort_by"
+                                             :resizable="column.resizable"
+                                             :formatter="column.formatter"
+                                             :show-overflow-tooltip="column.show_overflow_tooltip"
+                                             :align="column.align"
+                                             :header-align="column.header_align"
+                                             :class-name="column.class_name"
+                                             :label-class-name="column.label_class_name"
+                                             :selectable="column.selectable"
+                                             :reserve-selection="column.reserve_selection"
+                                             :filters="column.filters"
+                                             :filter-placement="column.filter_placement"
+                                             :filter-multiple="column.filter_multiple"
+                                             :filter-method="column.filter_method"
+                                             :filtered-value="column.filtered_value">
+
+                                <template scope="scope">
 
 
-      <el-footer v-show="viewModel.footer.display">
-        <el-card :body-style="{ padding: '5px' }">
-          <div slot="header">
-            <span>审计信息</span>
-          </div>
-          <div class="form-body">
-            <el-form ref="headForm" :inline="viewModel.footer.form.form_inline" :model="data.dataModel" v-show="viewModel.footer.display" :rules="viewModel.footer.form.rules">
-              <el-form-item label="活动名称" prop="name">
-                <el-input v-model="data.dataModel.name" class="input-edit"></el-input>
-              </el-form-item>
-              <el-form-item label="活动名称" prop="name">
-                <el-input v-model="data.dataModel.name" class="input-edit"></el-input>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-card>
-      </el-footer>
+                                    <!-- 类型：text、number、textarea、date、month、week、datetime、datetime-local、time、email、url、range、search、color (忽略属性：size form label) -->
+                                    <el-input
+                                            v-if="['text','number','textarea','date','month','week','datetime','datetime-local','time','email','url','range','search','color'].indexOf(column.type) != -1"
+                                            :type="column.type"
+                                            v-model="scope.row[column.data_key]"
+                                            :title="column.title({value: scope.row[column.data_key], itemModel : column})"
+                                            :name="column.name"
+                                            :value="column.value"
+                                            :minlength="column.minlength"
+                                            :maxlength="column.maxlength"
+                                            :min="column.min"
+                                            :max="column.max"
+                                            :step="column.step"
+                                            :prefix-icon="column.prefix_icon"
+                                            :suffix-icon="column.suffix_icon || ' '"
+                                            :auto-complete="column.auto_complete"
+                                            :autofocus="column.autofocus"
+                                            :tabindex="column.tabindex"
+                                            :readonly="column.readonly"
+                                            :disabled="column.disabled"
+                                            :clearable="column.clearable && !column.readonly && !column.disabled"
+                                            :rows="column.rows"
+                                            :resize="column.resize"
+                                            :autosize="column.autosize"
+                                            :placeholder="column.placeholder"
+                                            :class="'input-edit ' + column.class"
+                                            :size="viewModel.size"
+                                            :style="column.style">
+                                    </el-input>
 
-    </el-container>
-  </section>
+                                    <!-- 类型：ref (忽略属性：size form label)-->
+                                    <el-input v-if="column.type == 'ref'"
+                                              :type="column.type"
+                                              v-model="data.dataModel[column.data_key]"
+                                              :title="column.title({value: scope.row[column.data_key], itemModel : column})"
+                                              :name="column.name"
+                                              :value="column.value"
+                                              :minlength="column.minlength"
+                                              :maxlength="column.maxlength"
+                                              :min="column.min"
+                                              :max="column.max"
+                                              :step="column.step"
+                                              :prefix-icon="column.prefix_icon"
+                                              :suffix-icon="column.suffix_icon"
+                                              :auto-complete="column.auto_complete"
+                                              :autofocus="column.autofocus"
+                                              :tabindex="column.tabindex"
+                                              :readonly="column.readonly"
+                                              :disabled="column.disabled"
+                                              :clearable="column.clearable && !column.disabled"
+                                              :rows="column.rows"
+                                              :resize="column.resize"
+                                              :autosize="column.autosize"
+                                              :placeholder="column.placeholder"
+                                              :size="viewModel.size"
+                                              :class="'input-edit ref-input ' + column.class"
+                                              :style="(column.style || '') + (!viewModel.form_auto_width && column.item_width ? '; width:' + column.item_width + 'px;' : '')"
+                                              @change="column.events.change({data_key : column.data_key, value : $event, model : column, app : _self})">
+                                        <el-button slot="append" :disabled="column.disabled" icon="el-icon-search"
+                                                   @click="column.events.showRefModel({model : column, app : _self})"></el-button>
+                                    </el-input>
 
-  <section>
 
-    <!-- 界面设置弹出窗口 -->
-    <el-dialog ref="viewSetingsDialog"
-               :title="viewModel.viewSetings.title"
-               :visible.sync="viewModel.viewSetings.visible">
-      <el-collapse :value="['show_hide','size']">
-        <el-collapse-item title="显示/隐藏：" name="show_hide">
-          <el-row>
-            <el-col :span="12">
-              <el-switch v-model="viewModel.toolbar.display" active-text="显示工具栏" inactive-text="隐藏工具栏"></el-switch>
-            </el-col>
-            <el-col :span="12">
-              <el-switch v-model="viewModel.head.display" active-text="显示表头" inactive-text="隐藏表头">
-              </el-switch>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-switch v-model="viewModel.body.display" active-text="显示表体　" inactive-text="隐藏表体　"></el-switch>
-            </el-col>
-            <el-col :span="12">
-              <el-switch v-model="viewModel.footer.display" active-text="显示表尾" inactive-text="隐藏表尾"></el-switch>
-            </el-col>
-          </el-row>
-        </el-collapse-item>
-        <el-collapse-item title="组件风格：" name="size">
-          <el-button v-for="(sizeButton, $index) in viewModel.viewSetings.sizeButtons" :key="'sizeButton-' + $index" :type="sizeButton.type" :size="sizeButton.size" @click="sizeButton.click" style="margin: 10px" plain>
-            {{sizeButton.text}}
-          </el-button>
-        </el-collapse-item>
-      </el-collapse>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-card>
+                </el-main>
+            </transition>
 
-      <span slot="footer" class="dialog-footer">
+
+            <el-footer v-show="viewModel.footer.display">
+                <el-card :body-style="{ padding: '5px' }">
+                    <div slot="header">
+                        <span>审计信息</span>
+                    </div>
+                    <div class="form-body">
+                        <el-form ref="headForm" :inline="viewModel.footer.form.form_inline" :model="data.dataModel"
+                                 v-show="viewModel.footer.display" :rules="viewModel.footer.form.rules">
+                            <el-form-item label="活动名称" prop="name">
+                                <el-input v-model="data.dataModel.name" class="input-edit"></el-input>
+                            </el-form-item>
+                            <el-form-item label="活动名称" prop="name">
+                                <el-input v-model="data.dataModel.name" class="input-edit"></el-input>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                </el-card>
+            </el-footer>
+
+        </el-container>
+    </section>
+
+    <section>
+
+        <!-- 界面设置弹出窗口 -->
+        <el-dialog ref="viewSetingsDialog"
+                   :title="viewModel.viewSetings.title"
+                   :visible.sync="viewModel.viewSetings.visible">
+            <el-collapse :value="['show_hide','size']">
+                <el-collapse-item title="显示/隐藏：" name="show_hide">
+                    <el-row>
+                        <el-col :span="12">
+                            <el-switch v-model="viewModel.toolbar.display" active-text="显示工具栏"
+                                       inactive-text="隐藏工具栏"></el-switch>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-switch v-model="viewModel.head.display" active-text="显示表头" inactive-text="隐藏表头">
+                            </el-switch>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="12">
+                            <el-switch v-model="viewModel.body.display" active-text="显示表体　"
+                                       inactive-text="隐藏表体　"></el-switch>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-switch v-model="viewModel.footer.display" active-text="显示表尾"
+                                       inactive-text="隐藏表尾"></el-switch>
+                        </el-col>
+                    </el-row>
+                </el-collapse-item>
+                <el-collapse-item title="组件风格：" name="size">
+                    <el-button v-for="(sizeButton, $index) in viewModel.viewSetings.sizeButtons"
+                               :key="'sizeButton-' + $index" :type="sizeButton.type" :size="sizeButton.size"
+                               @click="sizeButton.click" style="margin: 10px" plain>
+                        {{sizeButton.text}}
+                    </el-button>
+                </el-collapse-item>
+            </el-collapse>
+
+            <span slot="footer" class="dialog-footer">
           <el-button type="warning" @click="handleResetViewSetings" :size="viewModel.size">重 置</el-button>
           <el-button @click="viewModel.viewSetings.visible = false" :size="viewModel.size">关 闭</el-button>
         </span>
-    </el-dialog>
+        </el-dialog>
 
-    <!-- :width="viewModel.refModels.tableRefModel.width ? (viewModel.refModels.tableRefModel.width + 'px') : null" -->
-    <el-dialog 
-      :title="viewModel.refModels.tableRefModel.title"
-      :visible.sync="viewModel.refModels.tableRefModel.visible"
-      :width="(viewModel.refModels.tableRefModel.width + (viewModel.refModels.tableRefModel.show_ref_selection ? viewModel.refModels.tableRefModel.selection_width : 0)) + 'px'"
-      :fullscreen="viewModel.refModels.tableRefModel.fullscreen"
-      :top="viewModel.refModels.tableRefModel.top"
-      :modal="viewModel.refModels.tableRefModel.modal"
-      :close-on-click-modal="viewModel.refModels.tableRefModel.close_on_click_modal"
-      :show-close="viewModel.refModels.tableRefModel.show_close"
-      :highlight-current-row="true"
-      :class="'ref-dialog ' + (viewModel.refModels.tableRefModel.class || '')">
+        <!-- 表型参照组件 -->
+        <!-- :width="viewModel.refModels.tableRefModel.width ? (viewModel.refModels.tableRefModel.width + 'px') : null" -->
+        <el-dialog
+                :title="viewModel.refModels.tableRefModel.title"
+                :visible.sync="viewModel.refModels.tableRefModel.visible"
+                :width="(viewModel.refModels.tableRefModel.width + (viewModel.refModels.tableRefModel.show_ref_selection ? viewModel.refModels.tableRefModel.selection_width : 0)) + 'px'"
+                :fullscreen="viewModel.refModels.tableRefModel.fullscreen"
+                :top="viewModel.refModels.tableRefModel.top"
+                :modal="viewModel.refModels.tableRefModel.modal"
+                :close-on-click-modal="viewModel.refModels.tableRefModel.close_on_click_modal"
+                :show-close="viewModel.refModels.tableRefModel.show_close"
+                :highlight-current-row="true"
+                :class="'ref-dialog ' + (viewModel.refModels.tableRefModel.class || '')">
 
-      <div v-if="viewModel.refModels.tableRefModel.enabled_search" style="padding-right: 200px;margin-bottom: 5px">
-        <el-input v-model="viewModel.refModels.tableRefModel.keyword" 
-                  :title="viewModel.refModels.tableRefModel.keyword" 
-                  :placeholder="viewModel.refModels.tableRefModel.search_placeholder"
-                  :clearable="viewModel.refModels.tableRefModel.search_clearable && !viewModel.refModels.tableRefModel.loading"
-                  :disabled="viewModel.refModels.tableRefModel.loading"
-                  :size="viewModel.size"
-                  @input="viewModel.refModels.tableRefModel.events.keywordChange">
-          <el-select v-model="viewModel.refModels.tableRefModel.search_key" 
-                     slot="prepend" 
-                     placeholder="请选择" 
-                     :size="viewModel.size" 
-                     :disabled="viewModel.refModels.tableRefModel.loading"
-                     style="width: 70px">
-            <el-option label="全部" value=""></el-option>
-            <el-option v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel" :label="column.label" :value="column.key"></el-option>
-          </el-select>
-          <el-button slot="append" icon="el-icon-search" title="搜索" 
-                    :disabled="viewModel.refModels.tableRefModel.loading" @click="viewModel.refModels.tableRefModel.events.search" style="padding: 0px 12px"></el-button>
-        </el-input>
-        <el-checkbox v-model="viewModel.refModels.tableRefModel.auto_search" 
-                     :disabled="viewModel.refModels.tableRefModel.loading" 
-                     class="right" style="right: -85px; margin-top: -25px">
-                     自动筛选
-        </el-checkbox>
-        <el-button v-if="viewModel.refModels.tableRefModel.enabled_refresh" 
-                   type="text" icon="el-icon-refresh" 
-                   :loading="viewModel.refModels.tableRefModel.loading" 
-                   style="float: right;margin-right: -145px;margin-top: -33px;" title="刷新参照数据" 
-                   @click="viewModel.refModels.tableRefModel.events.refresh">
-                   刷新
-        </el-button>
-        <el-button type="text"
-                   style="float: right;margin-right: -200px;margin-top: -33px;" title="展开/收缩已选择" 
-                   @click="viewModel.refModels.tableRefModel.events.showRefSelection">
+            <div v-if="viewModel.refModels.tableRefModel.enabled_search"
+                 style="padding-right: 200px;margin-bottom: 5px">
+                <el-input v-model="viewModel.refModels.tableRefModel.keyword"
+                          :title="viewModel.refModels.tableRefModel.keyword"
+                          :placeholder="viewModel.refModels.tableRefModel.search_placeholder"
+                          :clearable="viewModel.refModels.tableRefModel.search_clearable && !viewModel.refModels.tableRefModel.loading"
+                          :disabled="viewModel.refModels.tableRefModel.loading"
+                          :size="viewModel.size"
+                          @input="viewModel.refModels.tableRefModel.events.keywordChange">
+                    <el-select v-model="viewModel.refModels.tableRefModel.search_key"
+                               slot="prepend"
+                               placeholder="请选择"
+                               :size="viewModel.size"
+                               :disabled="viewModel.refModels.tableRefModel.loading"
+                               style="width: 70px">
+                        <el-option label="全部" value=""></el-option>
+                        <el-option v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel"
+                                   :label="column.label" :value="column.key"></el-option>
+                    </el-select>
+                    <el-button slot="append" icon="el-icon-search" title="搜索"
+                               :disabled="viewModel.refModels.tableRefModel.loading"
+                               @click="viewModel.refModels.tableRefModel.events.search"
+                               style="padding: 0px 12px"></el-button>
+                </el-input>
+                <el-checkbox v-model="viewModel.refModels.tableRefModel.auto_search"
+                             :disabled="viewModel.refModels.tableRefModel.loading"
+                             class="right" style="right: -85px; margin-top: -25px">
+                    自动筛选
+                </el-checkbox>
+                <el-button v-if="viewModel.refModels.tableRefModel.enabled_refresh"
+                           type="text" icon="el-icon-refresh"
+                           :loading="viewModel.refModels.tableRefModel.loading"
+                           style="float: right;margin-right: -145px;margin-top: -33px;" title="刷新参照数据"
+                           @click="viewModel.refModels.tableRefModel.events.refresh">
+                    刷新
+                </el-button>
+                <el-button type="text"
+                           style="float: right;margin-right: -200px;margin-top: -33px;" title="展开/收缩已选择"
+                           @click="viewModel.refModels.tableRefModel.events.showRefSelection">
                    <span v-if="!viewModel.refModels.tableRefModel.show_ref_selection">
                      展开<i class="el-icon-d-arrow-right"></i>
                    </span>
-                   <span v-if="viewModel.refModels.tableRefModel.show_ref_selection">
+                    <span v-if="viewModel.refModels.tableRefModel.show_ref_selection">
                      <i class="el-icon-d-arrow-left"></i>收缩
                    </span>
-                   
-        </el-button>
-      </div>
-      
-      <el-row :gutter="10" v-loading="viewModel.refModels.tableRefModel.loading"
-              :element-loading-text="viewModel.refModels.tableRefModel.element_loading_text">
-        <el-col :span="24 - (viewModel.refModels.tableRefModel.show_ref_selection ? viewModel.refModels.tableRefModel.selection_colspan : 0)">
-          <!-- :style="'width:' + (viewModel.refModels.tableRefModel.refTable.width || 460) + 'px'" -->
-          <el-table ref="refTable" border 
-            :data="viewModel.refModels.tableRefModel.refTable.data" 
-            :highlight-current-row="viewModel.refModels.tableRefModel.refTable.highlight_current_row" 
-            :height="viewModel.refModels.tableRefModel.refTable.height - (viewModel.refModels.tableRefModel.refTable.pagination.enabled ? 30 : 0)" 
-            :max-height="viewModel.refModels.tableRefModel.refTable.max_height" 
-            
-            :size="viewModel.size"
-            :class="'ref-table ' + (viewModel.refModels.tableRefModel.refTable.multiple ? 'ref-table--multiple-selection' : 'ref-table--single-selection')"
-            @row-click="viewModel.refModels.tableRefModel.events.rowClick"
-            @row-dblclick="viewModel.refModels.tableRefModel.events.rowDblclick"
-            @select="viewModel.refModels.tableRefModel.events.select"
-            @select-all="viewModel.refModels.tableRefModel.events.selectAll">
-            <el-table-column type="selection" v-if="viewModel.refModels.tableRefModel.refTable.show_selection" :width="40"></el-table-column>
-            <el-table-column type="index" v-if="viewModel.refModels.tableRefModel.refTable.show_index" :width="40"></el-table-column>
-            <el-table-column v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel"
-              :show-overflow-tooltip="viewModel.refModels.tableRefModel.refTable.show_overflow_tooltip"
-              :prop="column.data_key"
-              :label="column.label"
-              :min-width="column.min_width"
-              :width="column.width"
-              :sortable="column.sortable">
-            </el-table-column>
-          </el-table>
 
-          <el-pagination small 
-            v-if="viewModel.refModels.tableRefModel.refTable.pagination.enabled"
-            :current-page="viewModel.refModels.tableRefModel.refTable.pagination.page.pageNo"
-            :page-sizes="viewModel.refModels.tableRefModel.refTable.pagination.page_sizes"
-            :page-size="viewModel.refModels.tableRefModel.refTable.pagination.page.pageSize"
-            :layout="viewModel.refModels.tableRefModel.refTable.pagination.layout"
-            :total="viewModel.refModels.tableRefModel.refTable.pagination.page.total"
-            @size-change="viewModel.refModels.tableRefModel.events.handleSizeChange"
-            @current-change="viewModel.refModels.tableRefModel.events.handleCurrentChange">
-          </el-pagination>
+                </el-button>
+            </div>
 
-        </el-col>
-        <el-col v-if="viewModel.refModels.tableRefModel.show_ref_selection" 
-                :span="viewModel.refModels.tableRefModel.show_ref_selection ? viewModel.refModels.tableRefModel.selection_colspan : 0">
-          <el-table border style="width: 100%"
-            :data="viewModel.refModels.tableRefModel.selectionModel" 
-            :highlight-current-row="viewModel.refModels.tableRefModel.refTable.highlight_current_row" 
-            :height="viewModel.refModels.tableRefModel.refTable.height" 
-            :max-height="viewModel.refModels.tableRefModel.refTable.max_height" 
-            empty-text="未选择任务数据."
-            :size="viewModel.size">
-            <el-table-column type="index" v-if="viewModel.refModels.tableRefModel.refTable.show_index" :width="40"></el-table-column>
-            <el-table-column v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel"
-              :show-overflow-tooltip="viewModel.refModels.tableRefModel.refTable.show_overflow_tooltip"
-              :prop="column.data_key"
-              :label="column.label"
-              :min-width="column.min_width"
-              :width="column.width"
-              :sortable="column.sortable">
-            </el-table-column>
-            <el-table-column :width="40" fixed="right">
-              <template scope="scope">
-                <i class="el-icon-close" style="color: red; cursor:pointer" title="取消选择行" @click="viewModel.refModels.tableRefModel.events.cancelSelect(scope.row)"></i>
-              </template>
-            </el-table-column>
+            <el-row :gutter="10" v-loading="viewModel.refModels.tableRefModel.loading"
+                    :element-loading-text="viewModel.refModels.tableRefModel.element_loading_text">
+                <el-col :span="24 - (viewModel.refModels.tableRefModel.show_ref_selection ? viewModel.refModels.tableRefModel.selection_colspan : 0)">
+                    <!-- :style="'width:' + (viewModel.refModels.tableRefModel.refTable.width || 460) + 'px'" -->
+                    <el-table ref="refTable" border
+                              :data="viewModel.refModels.tableRefModel.refTable.data"
+                              :highlight-current-row="viewModel.refModels.tableRefModel.refTable.highlight_current_row"
+                              :height="viewModel.refModels.tableRefModel.refTable.height - (viewModel.refModels.tableRefModel.refTable.pagination.enabled ? 30 : 0)"
+                              :max-height="viewModel.refModels.tableRefModel.refTable.max_height"
 
-          </el-table>
-        </el-col>
-      </el-row>
-      
-      
+                              :size="viewModel.size"
+                              :class="'ref-table ' + (viewModel.refModels.tableRefModel.refTable.multiple ? 'ref-table--multiple-selection' : 'ref-table--single-selection')"
+                              @row-click="viewModel.refModels.tableRefModel.events.rowClick"
+                              @row-dblclick="viewModel.refModels.tableRefModel.events.rowDblclick"
+                              @select="viewModel.refModels.tableRefModel.events.select"
+                              @select-all="viewModel.refModels.tableRefModel.events.selectAll">
+                        <el-table-column type="selection"
+                                         v-if="viewModel.refModels.tableRefModel.refTable.show_selection"
+                                         :width="40"></el-table-column>
+                        <el-table-column type="index" v-if="viewModel.refModels.tableRefModel.refTable.show_index"
+                                         :width="40"></el-table-column>
+                        <el-table-column v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel"
+                                         :show-overflow-tooltip="viewModel.refModels.tableRefModel.refTable.show_overflow_tooltip"
+                                         :prop="column.data_key"
+                                         :label="column.label"
+                                         :min-width="column.min_width"
+                                         :width="column.width"
+                                         :sortable="column.sortable">
+                        </el-table-column>
+                    </el-table>
+
+                    <el-pagination small
+                                   v-if="viewModel.refModels.tableRefModel.refTable.pagination.enabled"
+                                   :current-page="viewModel.refModels.tableRefModel.refTable.pagination.page.pageNo"
+                                   :page-sizes="viewModel.refModels.tableRefModel.refTable.pagination.page_sizes"
+                                   :page-size="viewModel.refModels.tableRefModel.refTable.pagination.page.pageSize"
+                                   :layout="viewModel.refModels.tableRefModel.refTable.pagination.layout"
+                                   :total="viewModel.refModels.tableRefModel.refTable.pagination.page.total"
+                                   @size-change="viewModel.refModels.tableRefModel.events.handleSizeChange"
+                                   @current-change="viewModel.refModels.tableRefModel.events.handleCurrentChange">
+                    </el-pagination>
+
+                </el-col>
+                <el-col v-if="viewModel.refModels.tableRefModel.show_ref_selection"
+                        :span="viewModel.refModels.tableRefModel.show_ref_selection ? viewModel.refModels.tableRefModel.selection_colspan : 0">
+                    <el-table border style="width: 100%"
+                              :data="viewModel.refModels.tableRefModel.selectionModel"
+                              :highlight-current-row="viewModel.refModels.tableRefModel.refTable.highlight_current_row"
+                              :height="viewModel.refModels.tableRefModel.refTable.height"
+                              :max-height="viewModel.refModels.tableRefModel.refTable.max_height"
+                              empty-text="未选择任务数据."
+                              :size="viewModel.size">
+                        <el-table-column type="index" v-if="viewModel.refModels.tableRefModel.refTable.show_index"
+                                         :width="40"></el-table-column>
+                        <el-table-column v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel"
+                                         :show-overflow-tooltip="viewModel.refModels.tableRefModel.refTable.show_overflow_tooltip"
+                                         :prop="column.data_key"
+                                         :label="column.label"
+                                         :min-width="column.min_width"
+                                         :width="column.width"
+                                         :sortable="column.sortable">
+                        </el-table-column>
+                        <el-table-column :width="40" fixed="right">
+                            <template scope="scope">
+                                <i class="el-icon-close" style="color: red; cursor:pointer" title="取消选择行"
+                                   @click="viewModel.refModels.tableRefModel.events.cancelSelect(scope.row)"></i>
+                            </template>
+                        </el-table-column>
+
+                    </el-table>
+                </el-col>
+            </el-row>
 
 
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" :size="viewModel.size" :disabled="viewModel.refModels.tableRefModel.loading || !viewModel.refModels.tableRefModel.selectionModel.length" @click="viewModel.refModels.tableRefModel.events.confirm" title="确定">确定</el-button>
-        <el-button type="warning" :size="viewModel.size" :disabled="viewModel.refModels.tableRefModel.loading" @click="viewModel.refModels.tableRefModel.events.clear" title="清除选择">清除</el-button>
-        <el-button :size="viewModel.size" @click="viewModel.refModels.tableRefModel.events.close" title="关闭">关闭</el-button>
+            <span slot="footer" class="dialog-footer">
+        <el-button type="primary" :size="viewModel.size"
+                   :disabled="viewModel.refModels.tableRefModel.loading || !viewModel.refModels.tableRefModel.selectionModel.length"
+                   @click="viewModel.refModels.tableRefModel.events.confirm" title="确定">确定</el-button>
+        <el-button type="warning" :size="viewModel.size" :disabled="viewModel.refModels.tableRefModel.loading"
+                   @click="viewModel.refModels.tableRefModel.events.clear" title="清除选择">清除</el-button>
+        <el-button :size="viewModel.size" @click="viewModel.refModels.tableRefModel.events.close"
+                   title="关闭">关闭</el-button>
       </span>
-    </el-dialog>
+        </el-dialog>
 
-  </section>
+    </section>
 </div>
 </body>
 <!-- 引入 Vue -->
@@ -694,7 +854,7 @@
 <!-- 引入drag -->
 <script type="text/javascript" src="drag.js"></script>
 <script>
-  /** dialog 组件拖拽实现 */
-  new Drag('el-dialog').enable();
+    /** dialog 组件拖拽实现 */
+    new Drag('el-dialog').enable();
 </script>
 </html>

@@ -133,6 +133,10 @@ body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
 .el-table th > .cell, .el-table td > .cell {
     white-space: nowrap !important;
 }
+/** 表格单元格内容超出时不显示省略符号 */
+.el-table td > .cell {
+    text-overflow: clip !important;
+}
 
 /** 表格列头背景及内容颜色样式重写 */
 .el-table__footer-wrapper thead div,

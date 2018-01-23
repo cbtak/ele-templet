@@ -576,7 +576,7 @@
                                             :placeholder="itemModel.placeholder"
                                             :size="viewModel.size"
                                             :class="'input-edit ' + itemModel.class"
-                                            :style="'min-width:35px;' + (itemModel.style || '') + (!viewModel.form_auto_width && itemModel.width ? '; width:' + itemModel.width + 'px;' : '')"
+                                            :style="'width:100%;' + (itemModel.style || '')"
                                             @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                             @blur="itemModel.events.blur({data_key : itemModel.data_key, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                             @focus="itemModel.events.focus({data_key : itemModel.data_key, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})">
@@ -598,6 +598,7 @@
                                                      :disabled="itemModel.disabled"
                                                      :size="viewModel.size"
                                                      :class="'input-edit ' + itemModel.class"
+                                                     :style="'width:100%;' + (itemModel.style || '')"
                                                      @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                                      @blur="itemModel.events.blur({data_key : itemModel.data_key, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                                      @focus="itemModel.events.focus({data_key : itemModel.data_key, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})">
@@ -613,7 +614,7 @@
                                                     :disabled="itemModel.disabled"
                                                     :size="viewModel.size"
                                                     :class="'input-edit ' + itemModel.class"
-                                                    :style="'margin-left:5px!important;' + (itemModel.style || '') + (!viewModel.form_auto_width && itemModel.width ? '; width:' + itemModel.width + 'px;' : '')"
+                                                    :style="'margin-left:5px!important;width:100%;' + (itemModel.style || '')"
                                                     @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})">
                                         <el-radio v-for="option in itemModel.options"
                                                   v-show="option[itemModel.option_hide_key] != true"
@@ -636,7 +637,7 @@
                                                        :disabled="itemModel.disabled"
                                                        :size="viewModel.size"
                                                        :class="'input-edit ' + itemModel.class"
-                                                       :style="'margin-left:5px!important;' + (itemModel.style || '') + (!viewModel.form_auto_width && itemModel.width ? '; width:' + itemModel.width + 'px;' : '')"
+                                                       :style="'margin-left:5px!important;width:100%;' + (itemModel.style || '')"
                                                        @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})">
                                         <el-checkbox v-for="option in itemModel.options"
                                                      v-show="option[itemModel.option_hide_key] != true"
@@ -675,7 +676,7 @@
                                                :placeholder="itemModel.placeholder"
                                                :size="viewModel.size"
                                                :class="'input-edit ' + itemModel.class"
-                                               :style="(itemModel.style || '') + (!viewModel.form_auto_width && itemModel.width ? '; width:' + itemModel.width + 'px;' : '')"
+                                               :style="'width:100%;' + (itemModel.style || '')"
                                                @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                                @visible-change="itemModel.events.visibleChange"
                                                @remove-tag="itemModel.events.removeTag"
@@ -714,7 +715,7 @@
                                                  :placeholder="itemModel.placeholder"
                                                  :size="viewModel.size"
                                                  :class="'input-edit ' + itemModel.class"
-                                                 :style="(itemModel.style || '') + (!viewModel.form_auto_width && itemModel.width ? '; width:' + itemModel.width + 'px;' : '')"
+                                                 :style="'width:100%;' + (itemModel.style || '')"
                                                  @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                                  @activeItemChange="itemModel.events.activeItemChange">
                                     </el-cascader>
@@ -737,7 +738,7 @@
                                                :width="itemModel.switch_width"
                                                :size="viewModel.size"
                                                :class="'input-edit ' + itemModel.class"
-                                               :style="'margin:0 5px!important;' + (itemModel.style || '') + (!viewModel.form_auto_width && itemModel.width ? '; width:' + itemModel.width + 'px;' : '')"
+                                               :style="'margin:0 5px!important; ' + (itemModel.style || '')"
                                                @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})">
                                     </el-switch>
 
@@ -761,7 +762,7 @@
                                                :height="itemModel.height"
                                                :size="viewModel.size"
                                                :class="'input-edit ' + itemModel.class"
-                                               :style="'margin: 0 10px;' + (itemModel.style || '') + (!viewModel.form_auto_width && (itemModel.width - 5) ? '; width:' + (itemModel.width - 5) + 'px;' : '')"
+                                               :style="'margin: 0 10px; ' + (itemModel.style || '')"
                                                @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})">
                                     </el-slider>
 
@@ -789,7 +790,7 @@
                                              :placeholder="itemModel.placeholder"
                                              :size="viewModel.size"
                                              :class="'input-edit ' + itemModel.class"
-                                             :style="'margin: 0 5px;' + (itemModel.style || '') + (!viewModel.form_auto_width && itemModel.width ? '; width:' + itemModel.width + 'px;' : '')"
+                                             :style="'margin: 0 5px;width:100%;' + (itemModel.style || '')"
                                              @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})">
                                     </el-rate>
 
@@ -817,7 +818,7 @@
                                                     :placeholder="itemModel.placeholder"
                                                     :size="viewModel.size"
                                                     :class="'input-edit ' + itemModel.class"
-                                                    :style="(itemModel.style || '') + (!viewModel.form_auto_width && itemModel.width ? '; width:' + itemModel.width + 'px;' : 'width:100%;')"
+                                                    :style="'width:100%;' + (itemModel.style || '')"
                                                     @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                                     @blur="itemModel.events.blur({data_key : itemModel.data_key, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                                     @focus="itemModel.events.focus({data_key : itemModel.data_key, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})">
@@ -848,7 +849,7 @@
                                                     :placeholder="itemModel.placeholder"
                                                     :size="viewModel.size"
                                                     :class="'input-edit ' + itemModel.class"
-                                                    :style="(itemModel.style || '') + (!viewModel.form_auto_width && itemModel.width ? '; width:' + itemModel.width + 'px;' : 'width:100%;')"
+                                                    :style="'width:100%;' + (itemModel.style || '')"
                                                     @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                                     @blur="itemModel.events.blur({data_key : itemModel.data_key, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                                     @focus="itemModel.events.focus({data_key : itemModel.data_key, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})">
@@ -878,7 +879,7 @@
                                                     :placeholder="itemModel.placeholder"
                                                     :size="viewModel.size"
                                                     :class="'input-edit ' + itemModel.class"
-                                                    :style="(itemModel.style || '') + (!viewModel.form_auto_width && itemModel.width ? '; width:' + itemModel.width + 'px;' : 'width:100%;')"
+                                                    :style="'width:100%;' + (itemModel.style || '')"
                                                     @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                                     @blur="itemModel.events.blur({data_key : itemModel.data_key, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                                     @focus="itemModel.events.focus({data_key : itemModel.data_key, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})">
@@ -900,7 +901,7 @@
                                                      :clearable="itemModel.clearable && !itemModel.readonly && !itemModel.disabled"
                                                      :size="viewModel.size"
                                                      :class="'input-edit ' + itemModel.class"
-                                                     :style="'min-width:35px;' + (itemModel.style || '') + (!viewModel.form_auto_width && itemModel.width ? '; width:' + itemModel.width + 'px;' : '')"
+                                                     :style="'min-width:35px;' + (itemModel.style || '')"
                                                      @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                                      @active-change="itemModel.events.activechange">
                                     </el-color-picker>
@@ -931,7 +932,7 @@
                                               :placeholder="itemModel.placeholder"
                                               :size="viewModel.size"
                                               :class="'input-edit ref-input ' + itemModel.class"
-                                              :style="(itemModel.style || '') + (!viewModel.form_auto_width && itemModel.width ? '; width:' + itemModel.width + 'px;' : '')"
+                                              :style="'width:100%;' + (itemModel.style || '')"
                                               @change="itemModel.events.change({data_key : itemModel.data_key, value : $event, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})">
                                         <el-button slot="append" icon="el-icon-search"
                                                    @click="itemModel.events.showRefModel({itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"></el-button>

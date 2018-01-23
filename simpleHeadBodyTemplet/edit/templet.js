@@ -41,13 +41,15 @@
                         sorting: isNotNull(itemModel.sorting) ? itemModel.sorting : 0,					// 项目序号(排序用)
                         display: isNotNull(itemModel.display) ? itemModel.display : true,				// 显示属性
                         show_label: isNotNull(itemModel.show_label) ? itemModel.show_label : true,		// 显示 label
-                        item_width: isNotNull(itemModel.item_width) ? itemModel.item_width : null,		// 表单域宽度（控件宽度）
-                        item_label_width: isNotNull(itemModel.item_label_width) ? itemModel.item_label_width : null,	// 表单域标签的宽度
+                        width: isNotNull(itemModel.width) ? itemModel.width : null,		                // 表单域宽度（控件宽度）
+                        label_width: isNotNull(itemModel.label_width) ? itemModel.label_width : null,	// 表单域标签的宽度
                         class: isNotNull(itemModel.class) ? itemModel.class : '',						// 项目样式表 class
                         style: isNotNull(itemModel.style) ? itemModel.style : '',						// 项目样式表
                         getsets: itemModel.getsets || [],												// getset（编辑后根据此列表处理赋值）[{get : "name", set : "name", data_type : "date" }]
                         value_separator: isNotNull(itemModel.value_separator) ? itemModel.value_separator : ",",		// 多选时值的分隔符 默认：","，默认只对data_value_key使用此分隔符设值
                         data_value_key: isNotNull(itemModel.data_value_key) ? itemModel.data_value_key : null,			// 绑定数据对应设值字段（如有多选时，使用此字段设值，控件绑定字段一般为虚属性）,注：对时间范围、日期范围可传递数组值（如：data_value_key = [beginKey,endKey]），如需要将两个值合并，则默认传递字符串值的key即可（如：data_value_key = "daterange_values"）
+
+                        sortable: isNotNull(itemModel.sortable) ? itemModel.sortable : false,           //  表格列启用排序
                     }
 
 
@@ -187,7 +189,7 @@
                     } else if (itemModel.type == "switch") {
                         controlProperty = Object.assign(controlProperty, {
                             disabled: isNotNull(itemModel.disabled) ? itemModel.disabled : false,									// 是否禁用	boolean	—	false
-                            width: isNotNull(itemModel.width) ? itemModel.width : 40, 												// switch 的宽度（像素）	number	—	40
+                            switch_width: isNotNull(itemModel.switch_width) ? itemModel.switch_width : 40, 							// switch 的宽度（像素）（与项目的width字段冲突，此处更改为 switch_width）	number	—	40
                             active_icon_class: isNotNull(itemModel.active_icon_class) ? itemModel.active_icon_class : null, 		// switch 打开时所显示图标的类名，设置此项会忽略 active-text	string	—	—
                             inactive_icon_class: isNotNull(itemModel.inactive_icon_class) ? itemModel.inactive_icon_class : null, 	// switch 关闭时所显示图标的类名，设置此项会忽略 inactive-text	string	—	—
                             active_text: isNotNull(itemModel.active_text) ? itemModel.active_text : null, 							// switch 打开时的文字描述	string	—	—
@@ -440,7 +442,7 @@
                             }
 
                             $app.showRefModel({
-                                refModel: appData.model.ref
+                                refModel: appData.itemModel.ref
                             });
                         }
                     }
@@ -524,23 +526,23 @@
                     sizeButtons: [
                         {
                             type: "danger", size: null, text: "偏大", click: function () {
-                            $app.setSize(null);
-                        }
+                                $app.setSize(null);
+                            }
                         },
                         {
                             type: "primary", size: "medium", text: "正常", click: function () {
-                            $app.setSize("medium");
-                        }
+                                $app.setSize("medium");
+                            }
                         },
                         {
                             type: "success", size: "small", text: "偏小", click: function () {
-                            $app.setSize("small");
-                        }
+                                $app.setSize("small");
+                            }
                         },
                         {
                             type: "warning", size: "mini", text: "迷你", click: function () {
-                            $app.setSize("mini");
-                        }
+                                $app.setSize("mini");
+                            }
                         }
                     ],
                     historySetings: {}
@@ -810,6 +812,7 @@
 
                 head: {
                     data_model_key: null,
+                    $model : null,
                     display: true,
                     size: "mini",
                     form: {
@@ -834,6 +837,7 @@
 
                 body: {
                     data_model_key: null,
+                    $model : null,
                     display: true,
                     bodyModel: {
                         type: "table",
@@ -1030,11 +1034,15 @@
             viewModel.head.form.status_icon = isNotNull(params.viewModel.head.form.status_icon) ? params.viewModel.head.form.inline_message : viewModel.head.form.inline_message;
             viewModel.head.form.size = isNotNull(params.viewModel.head.form.size) ? params.viewModel.head.form.size : viewModel.head.size;
 
+            viewModel.head.$model = isNotNull(viewModel.head.data_model_key) ? params.dataModel[viewModel.head.data_model_key] : params.dataModel;
+
             // 表体设置
             viewModel.body.data_model_key = isNotNull(params.viewModel.body.data_model_key) ? params.viewModel.body.data_model_key : viewModel.body.data_model_key;
             viewModel.body.display = isNotNull(params.viewModel.body.display) ? params.viewModel.body.display : viewModel.body.display;
             viewModel.body.size = isNotNull(params.viewModel.body.size) ? params.viewModel.body.size : viewModel.size;
             viewModel.body.rules = params.viewModel.body.rules || viewModel.body.rules;
+
+            viewModel.body.$model = isNotNull(viewModel.body.data_model_key) ? params.dataModel[viewModel.body.data_model_key] : params.dataModel;
 
             // 表尾设置
             viewModel.footer.data_model_key = isNotNull(params.viewModel.footer.data_model_key) ? params.viewModel.footer.data_model_key : viewModel.footer.data_model_key;
@@ -1075,8 +1083,8 @@
                 params.viewModel.head.form.items.forEach(function (item, index, array) {
                     item.size = isNotNull(item.size) ? item.size : viewModel.head.size;
                     item.show_label = isNotNull(item.show_label) ? item.show_label : viewModel.head.form.show_label;
-                    item.item_width = isNotNull(item.item_width) ? item.item_width : viewModel.head.form.item_width;
-                    item.item_label_width = isNotNull(item.item_label_width) ? item.item_label_width : viewModel.head.form.item_label_width;
+                    item.width = isNotNull(item.width) ? item.width : viewModel.head.form.item_width;
+                    item.label_width = isNotNull(item.label_width) ? item.label_width : viewModel.head.form.item_label_width;
                     viewModel.head.form.items.push(methodModel.createItemModel(item, Pos.head));
                 });
             }
@@ -1090,8 +1098,8 @@
                 params.viewModel.footer.form.items.forEach(function (item, index, array) {
                     item.size = isNotNull(item.size) ? item.size : viewModel.footer.size;
                     item.show_label = isNotNull(item.show_label) ? item.show_label : viewModel.footer.form.show_label;
-                    item.item_width = isNotNull(item.item_width) ? item.item_width : viewModel.footer.form.item_width;
-                    item.item_label_width = isNotNull(item.item_label_width) ? item.item_label_width : viewModel.footer.form.item_label_width;
+                    item.width = isNotNull(item.width) ? item.width : viewModel.footer.form.item_width;
+                    item.label_width = isNotNull(item.label_width) ? item.label_width : viewModel.footer.form.item_label_width;
                     viewModel.footer.form.items.push(methodModel.createItemModel(item, Pos.footer));
                 });
             }

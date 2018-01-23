@@ -233,19 +233,71 @@ body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
 }
 
 /** 表格编辑时单元格编辑控件样式重写 */
-.edit-table input, .edit-table textarea {
+.edit-table input, .edit-table textarea,.edit-table .el-color-picker {
     border: 0px;
     border-radius: 0px;
     margin: 0px;
     min-height: 31px;
+    vertical-align: middle;
+}
+
+/** 表格编辑时不同尺寸的范围编辑控件样式重写 */
+.edit-table .el-range-editor.el-input__inner {
+    vertical-align: middle;
+    border: 0;
+}
+.edit-table .el-range-editor--mini.el-input__inner {
+    height: 31px;
+}
+.edit-table .el-range-editor--small.el-input__inner {
+    height: 32px;
+}
+.edit-table .el-range-editor--medium.el-input__inner {
+    height: 36px;
+}
+
+
+/*.edit-table .el-color-picker .input-edit{*/
+    /*height: 31px;*/
+/*}*/
+
+.edit-table .el-input-number {
+    width: 100%;
+}
+.edit-table .el-input-number__decrease  {
+    left: 0px;
+    height: 100%;
+    margin: -1px 0px;
+    border-radius: 0px;
+}
+.edit-table .el-input-number__increase {
+    right: 0px;
+    height: 100%;
+    margin: -1px 0px;
+    border-radius: 0px;
 }
 
 /** 表单相关样式 ************************************************************/
 
 /** 表单项目底部外边距重写 */
 .el-form-item {
-    margin-bottom: 5px !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
     margin-right: 5px !important;
+}
+
+/** 不同尺寸的表单域高度 */
+.el-form-item {
+    height:48px;
+}
+.el-form-item--mini {
+    height:34px!important;
+}
+.el-form-item--small {
+    height:38px!important;
+}
+.el-form-item--medium {
+    height:44px!important;
 }
 
 /** 表单项目label内边距及溢出样式重写 */
@@ -256,12 +308,60 @@ body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
     overflow: hidden;
 }
 
-/** 表单项目行高重写 */
-.el-form-item__label, .el-form-item__content {
-    line-height: 38px;
+
+/** 不同尺寸的组件内部高度 */
+.el-input__inner {
+    height: 40px;
+}
+.el-input--mini .el-input__inner {
+    height: 28px!important;
+}
+.el-input--small .el-input__inner {
+    height: 32px!important;
+}
+.el-input--medium .el-input__inner {
+    height: 36px!important;
 }
 
-/** input控件(公共样式)内边距重写 */
+/** 表单项目行高重写 */
+/*.el-form-item__label, .el-form-item__content {*/
+    /*line-height: 38px;*/
+/*}*/
+
+
+
+/*.el-form-item,*/
+/*.el-form-item .el-form-item__content,*/
+/*.el-form-item .el-form-item__label {*/
+    /*line-height: 45px;*/
+/*}*/
+
+/*.el-form-item--medium .el-form-item__content,*/
+/*.el-form-item--medium .el-form-item__label {*/
+    /*line-height: 40px !important;*/
+/*}*/
+
+/*.el-form-item--small.el-form-item*/
+/*.el-form-item--small .el-form-item__content,*/
+/*.el-form-item--small .el-form-item__label {*/
+    /*line-height: 38px !important;*/
+/*}*/
+
+/*.el-form-item--mini.el-form-item,*/
+/*.el-form-item--mini .el-form-item__content,*/
+/*.el-form-item--mini .el-form-item__label {*/
+    /*line-height: 38px !important;*/
+/*}*/
+
+.el-date-editor.el-input {
+    /*width: 100%;*/
+}
+
+.el-input__inner  {
+    /*vertical-align: middle;*/
+}
+
+    /** input控件(公共样式)内边距重写 */
 .el-input__inner {
     padding: 0 5px;
 }
@@ -284,30 +384,59 @@ body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
     padding: 0 25px 0 5px;
 }
 
+
+
 /** radio 组件 label 左内边距样式重写 */
 .el-radio__label {
     padding-left: 0px;
 }
-
 /** radio 组件左外边距样式重写 */
 .el-radio + .el-radio {
     margin-left: 8px;
 }
-
 /** radio group 组件左外边距样式重写 */
 .el-radio-group {
     margin-left: 0px !important;
 }
+/** radio 选中时top为0位置会上移，重写样式以避免上移 */
+.el-radio__original {
+    top: -5px !important;
+}
+/** radio 禁用时的样式重写 */
+.el-radio__input.is-disabled+span.el-radio__label {
+    color: #909090;
+    cursor: not-allowed;
+}
+/** radio 选中但被禁用时的样式重写 */
+.el-radio__input.is-disabled.is-checked .el-radio__inner {
+    border-color: #409EFF;
+    background: #409EFF;
+}
+
+
+
 
 /** checkbox 组件 label 左外边距样式重写 */
 .el-checkbox__label {
     padding-left: 4px;
 }
-
 /** checkbox 组件项目左外边距样式重写 */
 .el-checkbox + .el-checkbox {
     margin-left: 8px;
 }
+/** checkbox 选中但被禁用时样式重写 */
+.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
+    background-color: #409EFF;
+    border-color: #409EFF;
+}
+/** checkbox 禁用时label样式重写 */
+.el-checkbox__input.is-disabled+span.el-checkbox__label {
+    color: #909090;
+    cursor: not-allowed;
+}
+
+
+
 
 /** rate 组件行高样式重写 */
 .el-rate {
@@ -357,6 +486,12 @@ body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
 .el-select .el-tag__close.el-icon-close {
     right: -2px;
 }
+
+/** 滑块控件滑道外边距样式重写 */
+.el-slider__runway {
+    margin: 12px 0;
+}
+
 
 /** 分页组件内边距样式重写 */
 .el-pagination {

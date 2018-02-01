@@ -25,7 +25,7 @@
         //var cloneDate = JSON.parse(JSON.stringify({date : this}));
         //var d = new Date(cloneDate.date);
         var d = new Date(this);
-        var k={'y':'FullYear', 'q':'Month', 'm':'Month', 'w':'Date', 'd':'Date', 'h':'Hours', 'n':'Minutes', 's':'Seconds', 'ms':'MilliSeconds'};
+        var k={'y':'FullYear','q':'Month','m':'Month','w':'Date','d':'Date','h':'Hours','n':'Minutes','s':'Seconds','ms':'MilliSeconds'};
         var n={'q':3, 'w':7};
         eval('d.set'+k[interval]+'(d.get'+k[interval]+'()+'+((n[interval]||1)*number)+')');
         return d;
@@ -286,7 +286,7 @@
     }
 
     window.randomStr = function(randomFlag, min, max){
-        var str = "", range = min, arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+        var str = "", range = min, arr = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
         // 随机产生
         if(randomFlag){
             range = Math.round(Math.random() * (max-min)) + min;
@@ -296,6 +296,36 @@
             str += arr[pos];
         }
         return str;
+    }
+
+    window.RandomNumBoth = function(Min,Max){
+        var Range = Max - Min;
+        var Rand = Math.random();
+        var num = Min + Math.round(Rand * Range); //四舍五入
+        return num;
+    }
+
+    window.genKey = function() {
+        return Math.random().toString(36).substr(2);
+    }
+
+    window.getValue = function(obj, key) {
+        if(!obj || isNull(key)) {
+            return null;
+        }
+        if(key.indexOf(".") == -1) {
+            return obj[key];
+        }
+
+        var value = null, tempKeys = key.split("."), currNode = obj;
+        for(var i = 0; i < tempKeys.length - 1; i++) {
+            if(currNode) {
+                currNode = currNode[tempKeys[i]];
+            } else {
+                break;
+            }
+        }
+        return isNotNull(currNode) ? currNode[tempKeys[tempKeys.length-1]] : null;
     }
 
 })()

@@ -14,8 +14,7 @@
 
         <!-- 显示工具栏按钮（工具栏隐藏时显示） -->
         <transition name="el-zoom-in-center">
-            <i v-show="!viewModel.toolbar.display" class="el-icon-d-arrow-right show-toolbar-icon" title="显示工具栏"
-               @click="viewModel.toolbar.display = true"></i>
+            <i v-show="!viewModel.toolbar.display" class="el-icon-d-arrow-right show-toolbar-icon" title="显示工具栏" @click="viewModel.toolbar.display = true"></i>
         </transition>
 
         <!-- 工具栏 -->
@@ -54,7 +53,8 @@
                      @change="viewModel.collapseModel.events.change">
 
                 <el-collapse-item v-for="(collapseItem, $itemIndex) in viewModel.collapseModel.items"
-                                  :key="genKey()"
+                                  v-show="collapseItem.display"
+                                  :key="$itemIndex"
                                   :title="collapseItem.title"
                                   :name="collapseItem.name">
                     <!-- 按钮组 -->
@@ -65,12 +65,13 @@
                             <el-button type="success" :size="viewModel.size" icon="el-icon-edit-outline" title="粘贴行"></el-button>
                             <el-button type="danger" :size="viewModel.size" icon="el-icon-delete" title="删除行"></el-button>
                         </el-button-group>
-                        <el-dropdown @command="handleCommandSettings">
+                        <el-dropdown @command="handleCollapseItemSettings">
                             <el-button type="primary" :size="viewModel.size" icon="el-icon-setting" title="设置">
                                 <i class="el-icon-caret-bottom el-icon--right"></i>
                             </el-button>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="COLUMN_SETTINGS">数据列设置</el-dropdown-item>
+                                <el-dropdown-item command="FORMITEM_SETTINGS" v-if="collapseItem.type == 'form'">表单项目设置</el-dropdown-item>
+                                <el-dropdown-item command="COLUMN_SETTINGS" v-if="collapseItem.type == 'table'">数据列设置</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -90,8 +91,8 @@
                              :inline-message="collapseItem.formModel.inline_message"
                              :status-icon="collapseItem.formModel.status_icon"
                              :size="collapseItem.size">
-                        <el-form-item v-for="(itemModel, $index) in collapseItem.formModel.items"
-                                      :key="genKey()"
+                        <el-form-item v-for="(itemModel, $formItemIndex) in collapseItem.formModel.items"
+                                      :key="$formItemIndex"
                                       v-show="itemModel.display"
                                       :prop="itemModel.data_key"
                                       :label="itemModel.show_label ? itemModel.label : null"
@@ -538,8 +539,8 @@
                                          :fixed="true" :width="40"></el-table-column>
                         <el-table-column type="index" v-if="collapseItem.tableModel.show_index" :fixed="true"
                                          :width="40"></el-table-column>
-                        <el-table-column v-for="itemModel in collapseItem.tableModel.items"
-                                         :key="genKey()"
+                        <el-table-column v-for="(itemModel, $tableColumnIndex) in collapseItem.tableModel.items"
+                                         :key="$tableColumnIndex"
                                          :type="itemModel.column_type"
                                          :index="itemModel.index"
                                          :column-key="itemModel.column_key"
@@ -1003,8 +1004,8 @@
                                :disabled="viewModel.refModels.tableRefModel.loading"
                                style="width: 70px">
                         <el-option label="全部" value=""></el-option>
-                        <el-option v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel"
-                                   :key="genKey()"
+                        <el-option v-for="(column, $index) in viewModel.refModels.tableRefModel.refTable.columnModel"
+                                   :key="$index"
                                    :label="column.label" :value="column.key"></el-option>
                     </el-select>
                     <el-button slot="append" icon="el-icon-search" title="搜索"
@@ -1058,8 +1059,8 @@
                                          :width="40"></el-table-column>
                         <el-table-column type="index" v-if="viewModel.refModels.tableRefModel.refTable.show_index"
                                          :width="40"></el-table-column>
-                        <el-table-column v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel"
-                                         :key="genKey()"
+                        <el-table-column v-for="(column,$index) in viewModel.refModels.tableRefModel.refTable.columnModel"
+                                         :key="$index"
                                          :show-overflow-tooltip="viewModel.refModels.tableRefModel.refTable.show_overflow_tooltip"
                                          :prop="column.data_key"
                                          :label="column.label"
@@ -1092,8 +1093,8 @@
                               :size="viewModel.size">
                         <el-table-column type="index" v-if="viewModel.refModels.tableRefModel.refTable.show_index"
                                          :width="40"></el-table-column>
-                        <el-table-column v-for="column in viewModel.refModels.tableRefModel.refTable.columnModel"
-                                         :key="genKey()"
+                        <el-table-column v-for="(column,$index) in viewModel.refModels.tableRefModel.refTable.columnModel"
+                                         :key="$index"
                                          :show-overflow-tooltip="viewModel.refModels.tableRefModel.refTable.show_overflow_tooltip"
                                          :prop="column.data_key"
                                          :label="column.label"

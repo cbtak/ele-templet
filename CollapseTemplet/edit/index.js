@@ -1,4 +1,5 @@
-﻿var Templet = Vue.extend(
+﻿
+var Templet = Vue.extend(
     $T.createTemplet({
         dataModel: {
             name: "张三",
@@ -6,8 +7,17 @@
             checkbox_item: [],
             date_picker_week: new Date("2018-05-14"),
             body: [
-                {name: "张三", age: 20, remark: "备注说明1",radio_item : "01",checkbox_item : ['2']},
+                {name: "张三", age: 20, remark: "备注说明1",radio_item : "01",checkbox_item : ['2'],ref_item:"1001,1002"},
                 {name: "李四", age: 22, remark: "备注说明2"}
+            ]
+        },
+        commonDataModel:{
+            regions : [{id:"0101",name:"华南区"},{id:"0102",name:"华东区"},{id:"0103",name:"华北区"}],
+            psndocs : [
+                {id: "1001", code: "1001", age: 22,name: "张三"},
+                {id: "1002", code: "1002", age: 23,name: "李明"},
+                {id: "1003", code: "1003", age: 33,name: "王二"},
+                {id: "1004", code: "1004", age: 21,name: "小李"}
             ]
         },
         viewModel: {
@@ -191,7 +201,7 @@
                                     is_range: true,
                                     picker_options: {
                                         selectableRange: ['10:30:00 - 12:00:00', '14:30:00 - 15:30:00'], // 暂无效果，待详细测试
-                                        format: "HH:mm"
+                                        format: "HH:mm:ss"
                                     },
                                     item_type: 1
                                 },
@@ -277,7 +287,7 @@
                                     data_key: "ref_item",
                                     label: "参照",
                                     type: "ref",
-                                    ref: {
+                                    refModel: {
                                         type: "table"
                                     },
                                     item_type: 1,
@@ -547,11 +557,26 @@
                                 {
                                     key: "ref_item",
                                     data_key: "ref_item",
+                                    data_value_key : "ref_item",
                                     label: "参照",
+                                    common_data_key : "psndocs",   // 公共数据KEY（与 ref.model 提供一个属性即可,如传入此属性，则ref.model属性无效）
                                     type: "ref",
-                                    ref: {
-                                        type: "table"
+                                    refModel: {
+                                        type : "table",
+                                        ref_key : "id",
+                                        model : [],             // 参照数据模型（与 common_data_key 提供一个属性即可）
+                                        columns: [
+                                            {key: "code", data_key: "code", label: "编码", sortable: true, width: 80},
+                                            {key: "age", data_key: "age", label: "年龄", width: 80},
+                                            {key: "name", data_key: "name", label: "名称"}
+                                        ],
+                                        pagination: {
+                                            enabled: false				// 启用分页
+                                        }
                                     },
+                                    getsets : [
+                                        {get : "id", set : "ref_item"}
+                                    ],
                                     // disabled:true,
                                     width : 120,
                                     readonly: true,
@@ -935,7 +960,7 @@
                                     data_key: "ref_item",
                                     label: "参照",
                                     type: "ref",
-                                    ref: {
+                                    refModel: {
                                         type: "table"
                                     },
                                     item_type: 1,

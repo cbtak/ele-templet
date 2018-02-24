@@ -5,9 +5,42 @@
     <!-- 引入样式 -->
     <link rel="stylesheet" href="../../node_modules/element-ui/lib/theme-chalk/index.css">
     <link rel="stylesheet" type="text/css" href="templet.css">
+    <style>
+        .spinner {
+            width: 100px;
+            height: 100px;
+            margin: 30vh auto;
+            background-color: #12c506;
+            border-radius: 100%;
+            -webkit-animation: scaleout 1.0s infinite ease-in-out;
+            animation: scaleout 1.0s infinite ease-in-out;
+        }
+
+        @-webkit-keyframes scaleout {
+            0% { -webkit-transform: scale(0.0) }
+            100% {
+                -webkit-transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes scaleout {
+            0% {
+                transform: scale(0.0);
+                -webkit-transform: scale(0.0);
+            } 100% {
+                  transform: scale(1.2);
+                  -webkit-transform: scale(1.2);
+                  opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-<div id="app">
+<!-- 页面初始化加载支动画 -->
+<div id="page_loading" class="spinner"></div>
+
+<div id="app" class="hide">
 
     <!-- templetView 为模板主视图区域 -->
     <section id="templetView" v-show="viewModel.display">
@@ -452,10 +485,9 @@
                             <!-- 类型：ref (忽略属性：size form label)-->
                             <el-input v-if="itemModel.type == 'ref'"
                                       :type="itemModel.type"
-                                      v-model="collapseItem.$model[itemModel.data_key]"
                                       :title="itemModel.title({value: collapseItem.$model[itemModel.data_key], itemModel : itemModel, $model : collapseItem.$model})"
+                                      :value="refShow({data_key : itemModel.data_key, itemModel : itemModel, app : _self, $model : collapseItem.$model})"
                                       :name="itemModel.name"
-                                      :value="itemModel.value"
                                       :minlength="itemModel.minlength"
                                       :maxlength="itemModel.maxlength"
                                       :min="itemModel.min"
@@ -931,10 +963,9 @@
                                 <!-- 类型：ref (忽略属性：size form label)-->
                                 <el-input v-if="itemModel.type == 'ref'"
                                           :type="itemModel.type"
-                                          v-model="scope.row[itemModel.data_key]"
+                                          :value="refShow({data_key : itemModel.data_key, itemModel : itemModel, app : _self, scope : scope, $model : scope.row})"
                                           :title="itemModel.title({value: scope.row[itemModel.data_key], itemModel : itemModel, $model : scope.row})"
                                           :name="itemModel.name"
-                                          :value="itemModel.value"
                                           :minlength="itemModel.minlength"
                                           :maxlength="itemModel.maxlength"
                                           :min="itemModel.min"
@@ -1018,7 +1049,7 @@
                              class="right" style="right: -85px; margin-top: -25px">
                     自动筛选
                 </el-checkbox>
-                <el-button v-if="viewModel.refModels.tableRefModel.enabled_refresh"
+                <el-button :disabled="!viewModel.refModels.tableRefModel.enabled_refresh"
                            type="text" icon="el-icon-refresh"
                            :loading="viewModel.refModels.tableRefModel.loading"
                            style="float: right;margin-right: -145px;margin-top: -33px;" title="刷新参照数据"

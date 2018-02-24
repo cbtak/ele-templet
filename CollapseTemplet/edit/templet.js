@@ -23,6 +23,73 @@
             //viewModel.toolbar.class = viewModel.head.size ?  'toolbar-' + viewModel.head.size : 'toolbar';
         },
         /**
+         * 获取属性值
+         * @param $model
+         * @param attr
+         * @returns {*}
+         */
+        getValue : function ($model, attr) {
+            if(!$model || isNull(attr)) {
+                return null;
+            }
+            if(attr.indexOf(".") == -1) {
+                return $model[attr];
+            }
+            let attrs = attr.split("."), tempNode = $model;
+            for(var i = 0; i < attrs.length - 1; i++) {
+                if(tempNode) {
+                    tempNode = tempNode[attrs[i]];
+                } else {
+                    break;
+                }
+            }
+            return isNotNull(tempNode) ? tempNode[attrs[attrs.length-1]] : null;
+        },
+        /**
+         * 获取属性值（多个数据对象）
+         * @param $array
+         * @param attr
+         * @returns {*}
+         */
+        getValues : function ($array, attr) {
+            if(!$array) {
+                return null;
+            }
+            let values = [];
+            $array.forEach(function (item) {
+                values.push($app.getValue(item, attr));
+            });
+            return values;
+        },
+        /**
+         * 设置属性值
+         * @param $model
+         * @param attr
+         * @param val
+         */
+        setValue : function ($model, attr, val) {
+            if(!$model || isNull(attr)) {
+                return;
+            }
+            if(attr.indexOf(".") == -1) {
+                $model[attr] = val;
+                return;
+            }
+            let attrs = attr.split("."), tempNode = $model;
+            for(var i = 0; i < attrs.length - 1; i++) {
+                // 上级属性为空时补全
+                if(!tempNode[attrs[i]]) {
+                    tempNode[attrs[i]] = {};
+                }
+                tempNode = tempNode[attrs[i]];
+            }
+            tempNode[attrs[attrs.length-1]] = val;
+        },
+
+        refShow : function (appData) {
+            return $app.getValue(appData.$model,appData.data_key);
+        },
+        /**
          * 创建项目模型
          * @param itemModel 项目模型
          * @param itemType  项目类型：form: 表单项目、2 table: 表格项目  (暂未用属性)
@@ -53,7 +120,7 @@
                 value_separator: isNotNull(itemModel.value_separator) ? itemModel.value_separator : ",",		// 多选时值的分隔符 默认：","，默认只对data_value_key使用此分隔符设值
                 data_value_key: isNotNull(itemModel.data_value_key) ? itemModel.data_value_key : null,			// 绑定数据对应设值字段（如有多选时，使用此字段设值，控件绑定字段一般为虚属性）,注：对时间范围、日期范围可传递数组值（如：data_value_key = [beginKey,endKey]），如需要将两个值合并，则默认传递字符串值的key即可（如：data_value_key = "daterange_values"）
                 common_data_key: isNotNull(itemModel.common_data_key) ? itemModel.common_data_key : null,       // 公共数据集KEY，如传入此属性则从 commonDataModel 中取对应公共数据集
-                sortable: isNotNull(itemModel.sortable) ? itemModel.sortable : false,           //  表格列启用排序
+                sortable: isNotNull(itemModel.sortable) ? itemModel.sortable : false,           // 表格列启用排序
             }
 
 
@@ -309,12 +376,13 @@
                 });
             } else if (itemModel.type == "ref") {
                 controlProperty = Object.assign(controlProperty, {
+                    multiple: isNotNull(itemModel.multiple) ? itemModel.multiple : false,					// 是否多选	boolean	—	false
                     type: isNotNull(itemModel.type) ? itemModel.type : 'text',								// 类型	string	text / textarea	text
-                    value: isNotNull(itemModel.value) ? itemModel.value : null,							// 绑定值	string / number	—	—
-                    maxlength: isNotNull(itemModel.maxlength) ? itemModel.maxlength : null,				// 最大输入长度	number	—	—
-                    minlength: isNotNull(itemModel.minlength) ? itemModel.minlength : null,				// 	最小输入长度	number	—	—
+                    value: isNotNull(itemModel.value) ? itemModel.value : null,							    // 绑定值	string / number	—	—
+                    maxlength: isNotNull(itemModel.maxlength) ? itemModel.maxlength : null,				    // 最大输入长度	number	—	—
+                    minlength: isNotNull(itemModel.minlength) ? itemModel.minlength : null,				    // 	最小输入长度	number	—	—
                     placeholder: isNotNull(itemModel.placeholder) ? itemModel.placeholder : null,			// 输入框占位文本	string	—	—
-                    clearable: isNotNull(itemModel.clearable) ? itemModel.clearable : true,				// 是否可清空	boolean	—	false
+                    clearable: isNotNull(itemModel.clearable) ? itemModel.clearable : true,				    // 是否可清空	boolean	—	false
                     disabled: isNotNull(itemModel.disabled) ? itemModel.disabled : false,					// 禁用	boolean	—	false
                     size: isNotNull(itemModel.size) ? itemModel.size : null,								// 输入框尺寸，只在 type!="textarea" 时有效	string	medium / small / mini	—
                     prefix_icon: isNotNull(itemModel.prefix_icon) ? itemModel.prefix_icon : null,			// 输入框头部图标	string	—	—
@@ -323,7 +391,7 @@
                     autosize: isNotNull(itemModel.autosize) ? itemModel.autosize : false,					// 自适应内容高度，只对 type="textarea" 有效，可传入对象，如，{ minRows: 2, maxRows: 6 }	boolean / object	—	false
                     auto_complete: isNotNull(itemModel.auto_complete) ? itemModel.auto_complete : "off",	// 原生属性，自动补全	string	on, off	off
                     name: isNotNull(itemModel.name) ? itemModel.name : itemModel.data_key,					// 原生属性	string	—	—
-                    readonly: isNotNull(itemModel.readonly) ? itemModel.readonly : false,					// 原生属性，是否只读	boolean	—	false
+                    readonly: isNotNull(itemModel.readonly) ? itemModel.readonly : true,					// 原生属性，是否只读	boolean	—	false
                     max: isNotNull(itemModel.max) ? itemModel.max : null,									// 原生属性，设置最大值	—	—	—
                     min: isNotNull(itemModel.min) ? itemModel.min : null,									// 原生属性，设置最小值	—	—	—
                     step: isNotNull(itemModel.step) ? itemModel.step : null,								// 原生属性，设置输入字段的合法数字间隔	—	—	—
@@ -334,6 +402,7 @@
                     tabindex: isNotNull(itemModel.tabindex) ? itemModel.tabindex : null,					// 输入框的tabindex	string	-	-
                     refModel : itemModel.refModel || {}	// 参照对象
                 });
+                controlProperty.refModel.getsets = controlProperty.refModel.getsets || [];					// getset（编辑后根据此列表从选择的项目取相应属性处理赋值）
             }
 
             /**
@@ -354,6 +423,39 @@
                     change: function (appData) {
                         if (itemModel.events && itemModel.events.change) {
                             itemModel.events.change(appData);
+                            return;
+                        }
+
+                        console.log("## event[change]: {data_key:" + appData.data_key+",value:" +appData.value+ "}");
+
+                        /** change：参照类型处理 */
+                        if (["ref"].indexOf(appData.itemModel.type) != -1) {
+                            // 参照的 change 事件 value 为空时即为点击清除内容操作，此时按参照的取值设值处理进行清空操作
+                            if(isNull(appData.value)) {
+                                /** 1. 参照赋值处理 */
+                                if(isNotNull(appData.itemModel.data_value_key)) {
+                                    appData.app.setValue(appData.$model, appData.itemModel.data_value_key, null);
+                                }
+                                /** 2. 参照的 getsets 处理 */
+                                if(appData.itemModel.refModel.getsets && appData.itemModel.refModel.getsets.length) {
+                                    appData.itemModel.refModel.getsets.forEach(function (item) {
+                                        if(item.get && item.set) {
+                                            appData.app.setValue(appData.$model, item.set, null);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        /**
+                         * 通用 getsets 处理
+                         */
+                        if(appData.itemModel.getsets && appData.itemModel.getsets.length) {
+                            appData.itemModel.getsets.forEach(function (item) {
+                                if(item.get && item.set) {
+                                    $app.setValue(appData.$model, item.set, $app.getValue(appData.$model, item.get));
+                                }
+                            });
                         }
                     },
 
@@ -448,13 +550,11 @@
                         return;
                     }
                     let value_key = appData.itemModel.data_value_key || appData.itemModel.data_key;
-                    let value = getValue(appData.$model, value_key);
+                    let value = appData.app.getValue(appData.$model, value_key);
                     $app.showRefModel({
                         source : appData.itemModel,
-                        refModel: appData.itemModel.refModel,
                         $model : appData.$model,
-                        values : isNotNull(value) ? value.split(",") : [],
-                        getsets : appData.itemModel.getsets || []
+                        values : isNotNull(value) ? value.split(appData.itemModel.value_separator) : [],
                     });
                 }
             }
@@ -496,7 +596,7 @@
          * @param appData   参照数据模型参数
          */
         showRefModel : function (appData) {
-            if (appData.refModel.type == "table") {
+            if (appData.source.refModel.type == "table") {
                 $app.viewModel.refModels.tableRefModel.show();
                 $app.viewModel.refModels.tableRefModel.initRefModel(appData);
             }
@@ -631,7 +731,7 @@
                 close_on_click_modal: false,			// 点击模态层关闭参照
                 class: null,							// 参照的自定义样式表
                 search_key: "",						    // 搜索属性key(筛选的字段，为空时为所有属性)
-                enabled_refresh: true,					// 启用刷新
+                enabled_refresh: false,					// 启用刷新
                 enabled_search: true,					// 启用搜索状态
                 auto_search: true,						// 自动搜索
                 search_clearable: true,				    // 搜索框是否启用清除
@@ -656,17 +756,13 @@
                     show_overflow_tooltip: true,		// 单元格内容溢出tips
 
                     // 参照表格列模型
-                    columnModel: [
-                        {key: "code", data_key: "code", label: "编码", sortable: true, width: 80},
-                        {key: "age", data_key: "age", label: "年龄", width: 80},
-                        {key: "name", data_key: "name", label: "名称"}
-                    ],
+                    columnModel: [],
 
                     // 分页控件
                     pagination: {
-                        enabled: true,				// 启用分页
+                        enabled: false,		// 启用分页
                         page: {
-                            total: 0,		//总记录数
+                            total: 0,		// 总记录数
                             pageNo: 1,		// 当前页码
                             pageSize: 20	// 每页显示条数
                         },
@@ -690,16 +786,16 @@
 
                 /** 参照初始化 */
                 initRefModel : function (appData) {
-                    $app.viewModel.refModels.tableRefModel.refDataModel = appData.refModel.model || [];
-                    $app.viewModel.refModels.tableRefModel.refTable.columnModel = appData.refModel.columns || [];
+                    $app.viewModel.refModels.tableRefModel.refDataModel = appData.source.refModel.model || [];
+                    $app.viewModel.refModels.tableRefModel.refTable.columnModel = appData.source.refModel.columns || [];
                     $app.viewModel.refModels.tableRefModel.$model = appData.$model;
                     $app.viewModel.refModels.tableRefModel.source = appData.source;
-                    $app.viewModel.refModels.tableRefModel.getsets = appData.getsets;
-                    $app.viewModel.refModels.tableRefModel.ref_key = isNotNull(appData.refModel.ref_key) ? appData.refModel.ref_key : "id";
+                    $app.viewModel.refModels.tableRefModel.refTable.multiple = appData.source.refModel.multiple;
+                    $app.viewModel.refModels.tableRefModel.show_ref_selection = isNotNull(appData.source.refModel.show_ref_selection) ? appData.source.refModel.show_ref_selection : appData.source.refModel.multiple;
+                    $app.viewModel.refModels.tableRefModel.ref_key = isNotNull(appData.source.refModel.ref_key) ? appData.source.refModel.ref_key : "id";
 
                     /** 默认值处理 */
                     if(appData.values && appData.values.length) {
-
                         $app.viewModel.refModels.tableRefModel.selectionModel = $app.viewModel.refModels.tableRefModel.refDataModel.filter(function (item) {
                             return appData.values.indexOf(item[$app.viewModel.refModels.tableRefModel.ref_key]) != -1;
                         });
@@ -708,17 +804,13 @@
                     }
 
                     /** 分页属性设置 */
-                    if(appData.refModel.pagination) {
-                        $app.viewModel.refModels.tableRefModel.refTable.pagination.enabled = isNotNull(appData.refModel.pagination.enabled) ? appData.refModel.pagination.enabled : $app.viewModel.refModels.tableRefModel.refTable.pagination.enabled;
-                        $app.viewModel.refModels.tableRefModel.refTable.pagination.page_sizes = appData.refModel.pagination.page_sizes || $app.viewModel.refModels.tableRefModel.refTable.pagination.page_sizes;
-                        $app.viewModel.refModels.tableRefModel.refTable.pagination.layout = isNotNull(appData.refModel.pagination.layout) ? appData.refModel.pagination.layout : $app.viewModel.refModels.tableRefModel.refTable.pagination.layout;
-                        if(appData.refModel.pagination.page) {
-                            // 指定 total、pageNo 暂无意义
-                            //$app.viewModel.refModels.tableRefModel.refTable.pagination.page.total = isNotNull(appData.refModel.pagination.page.total) ? appData.refModel.pagination.page.total : $app.viewModel.refModels.tableRefModel.refTable.pagination.page.total;
-                            //$app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageNo = isNotNull(appData.refModel.pagination.page.pageNo) ? appData.refModel.pagination.page.pageNo : $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageNo;
-                            $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageSize = isNotNull(appData.refModel.pagination.page.pageSize) ? appData.refModel.pagination.page.pageSize : $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageSize;
-                        }
-                    }
+                    $app.viewModel.refModels.tableRefModel.refTable.pagination.enabled = appData.source.refModel.pagination && isNotNull(appData.source.refModel.pagination.enabled) ? appData.source.refModel.pagination.enabled : false;
+                    $app.viewModel.refModels.tableRefModel.refTable.pagination.page_sizes = appData.source.refModel.pagination && appData.source.refModel.pagination.page_sizes ? appData.source.refModel.pagination.page_sizes : [20, 30, 50, 100];
+                    $app.viewModel.refModels.tableRefModel.refTable.pagination.layout = appData.source.refModel.pagination && isNotNull(appData.source.refModel.pagination.layout) ? appData.source.refModel.pagination.layout : "total, sizes, prev, pager, next";
+                    // 指定 total、pageNo 暂无意义
+                    //$app.viewModel.refModels.tableRefModel.refTable.pagination.page.total = appData.source.refModel.pagination && appData.source.refModel.pagination.page && isNotNull(appData.source.refModel.pagination.page.total) ? appData.source.refModel.pagination.page.total : 0;
+                    //$app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageNo = appData.source.refModel.pagination && appData.source.refModel.pagination.page && isNotNull(appData.source.refModel.pagination.page.pageNo) ? appData.source.refModel.pagination.page.pageNo : 1;
+                    $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageSize = appData.source.refModel.pagination && appData.source.refModel.pagination.page && isNotNull(appData.source.refModel.pagination.page.pageSize) ? appData.source.refModel.pagination.page.pageSize : 20;
 
                     /** 启用分页时处理 */
                     if (viewModel.refModels.tableRefModel.refTable.pagination.enabled) {
@@ -731,57 +823,84 @@
                     }
                     $app.viewModel.refModels.tableRefModel.events.setShowRefData();
                 },
-
+                /**
+                 * 表型参照：显示
+                 * @param appData
+                 */
                 show: function (appData) {
                     $app.viewModel.refModels.tableRefModel.visible = true;
                 },
+                /**
+                 * 表型参照：隐藏
+                 * @param appData
+                 */
                 hide: function (appData) {
                     $app.viewModel.refModels.tableRefModel.visible = false;
+                    // 显示参照窗口直接更新columnModel集合时，列宽会记录前一次窗口的设置，此处进行清空，以避免此种情况
+                    $app.viewModel.refModels.tableRefModel.refTable.columnModel = [];
                 },
 
+                /**
+                 * 表型参照：事件集合
+                 */
                 events: {
+                    /**
+                     * 表型参照：确认按钮事件处理
+                     */
                     confirm: function () {
                         try {
-                            $app.viewModel.refModels.tableRefModel.hide();
-                            let values = [];
-                            $app.viewModel.refModels.tableRefModel.selectionModel.forEach(function (item) {
-                                values.push(item[$app.viewModel.refModels.tableRefModel.ref_key]);
-                            });
+                            let tableRefModel = $app.viewModel.refModels.tableRefModel;
+                            let source = tableRefModel.source;
 
-                            if($app.viewModel.refModels.tableRefModel.getsets && $app.viewModel.refModels.tableRefModel.getsets.length) {
-                                $app.viewModel.refModels.tableRefModel.getsets.forEach(function (item) {
+                            /** 1. 参照赋值处理 */
+                            let values = $app.getValues(tableRefModel.selectionModel, tableRefModel.ref_key);
+                            let value_key = source.data_value_key || source.data_key;
+                            $app.setValue(tableRefModel.$model, value_key, values.join(source.value_separator));
+
+                            /** 2. 参照的getsets 处理 */
+                            if(source.refModel.getsets && source.refModel.getsets.length) {
+                                source.refModel.getsets.forEach(function (item) {
                                     if(item.get && item.set) {
-                                        var tempKeys = item.set.split(".");
-                                        var currNode = $app.viewModel.refModels.tableRefModel.$model;
-                                        if(tempKeys.length > 1) {
-                                            for(var i=0; i<tempKeys.length - 1; i++) {
-                                                if(currNode) {
-                                                    if(!currNode[tempKeys[i]]) {
-                                                        currNode[tempKeys[i]] = {};
-                                                    }
-                                                    currNode = currNode[tempKeys[i]];
-                                                }
-                                            }
-                                        }
-                                        if(currNode) {
-                                            currNode[tempKeys[tempKeys.length-1]] = values.join(",");
-                                        }
+                                        let tempValues = $app.getValues(tableRefModel.selectionModel, item.get);
+                                        $app.setValue(tableRefModel.$model, item.set, tempValues.join(source.value_separator));
                                     }
                                 });
                             }
-                        } catch (err) {
 
+                            /** 3. 通用 getsets 处理 */
+                            if(source.getsets && source.getsets.length) {
+                                source.getsets.forEach(function (item) {
+                                    if(item.get && item.set) {
+                                        let tempValue = $app.getValue(tableRefModel.$model, item.get);
+                                        $app.setValue(tableRefModel.$model, item.set, tempValue);
+                                    }
+                                });
+                            }
+
+                            /** 4. 隐藏参照窗口 */
+                            $app.viewModel.refModels.tableRefModel.hide();
+                        } catch (err) {
+                            // 异常消息
                         }
                     },
+                    /**
+                     * 表型参照：清空按钮事件处理
+                     */
                     clear: function () {
                         // 清空参照表格选择行
                         $app.$refs.refTable.clearSelection();
                         // 清空参照已选择数据模型
                         $app.viewModel.refModels.tableRefModel.selectionModel = [];
                     },
+                    /**
+                     * 表型参照：关闭按钮事件处理
+                     */
                     close: function () {
                         $app.viewModel.refModels.tableRefModel.hide();
                     },
+                    /**
+                     * 表型参照：搜索事件处理
+                     */
                     search: function () {
                         let keyword = $app.viewModel.refModels.tableRefModel.keyword;
                         let search_key = $app.viewModel.refModels.tableRefModel.search_key;
@@ -819,6 +938,9 @@
                             $app.viewModel.refModels.tableRefModel.refTable.data = filterResult;
                         }
                     },
+                    /**
+                     * 表型参照：关键字输入框值变更事件处理
+                     */
                     keywordChange: function () {
                         console.log("## keyword: " + $app.viewModel.refModels.tableRefModel.keyword);
                         if (!$app.viewModel.refModels.tableRefModel.auto_search) {
@@ -826,28 +948,43 @@
                         }
                         $app.viewModel.refModels.tableRefModel.events.search();
                     },
+                    /**
+                     * 表型参照：刷新事件处理
+                     */
                     refresh: function () {
                         $app.viewModel.refModels.tableRefModel.loading = true;
                         setTimeout(function () {
                             $app.viewModel.refModels.tableRefModel.loading = false;
                         }, 5000);
                     },
+                    /**
+                     * 表型参照：显示已选择的参照数据列表事件处理
+                     */
                     showRefSelection: function () {
                         $app.viewModel.refModels.tableRefModel.show_ref_selection = !$app.viewModel.refModels.tableRefModel.show_ref_selection;
                         //$app.viewModel.refModels.tableRefModel.width += $app.viewModel.refModels.tableRefModel.selection_width * (!$app.viewModel.refModels.tableRefModel.show_ref_selection ? -1 : 1);
                     },
-
+                    /**
+                     * 表型参照：隐藏已选择的参照数据列表事件处理
+                     */
                     handleSizeChange: function (val) {
                         $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageSize = val;
                         if ($app.viewModel.refModels.tableRefModel.refTable.pagination.page.total) {
                             $app.viewModel.refModels.tableRefModel.events.setShowRefData();
                         }
                     },
-
+                    /**
+                     * 表型参照：分页时页码变更事件处理
+                     * @param val
+                     */
                     handleCurrentChange: function (val) {
                         $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageNo = val;
                         $app.viewModel.refModels.tableRefModel.events.setShowRefData();
                     },
+                    /**
+                     * 表型参照：参照窗口数据显示处理
+                     * @param val
+                     */
                     setShowRefData: function () {
                         if (viewModel.refModels.tableRefModel.refTable.pagination.enabled) {
                             var startIndex = ($app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageNo - 1) * $app.viewModel.refModels.tableRefModel.refTable.pagination.page.pageSize;
@@ -865,11 +1002,20 @@
                             });
                         }, 100);
                     },
-
-
+                    /**
+                     * 表型参照：数据表格行点击事件处理
+                     * @param row
+                     * @param event
+                     * @param column
+                     */
                     rowClick: function (row, event, column) {
                     },
-
+                    /**
+                     * 表型参照：数据表格行双击事件处理
+                     * @param row
+                     * @param event
+                     * @param column
+                     */
                     rowDblclick: function (row, event) {
                         // 选择/取消选择当前行
                         $app.$refs.refTable.toggleRowSelection(row);
@@ -879,6 +1025,11 @@
                             $app.viewModel.refModels.tableRefModel.events.confirm();
                         }
                     },
+                    /**
+                     * 表型参照：数据表格行选择事件处理
+                     * @param selection
+                     * @param row
+                     */
                     select: function (selection, row) {
                         if ($app.viewModel.refModels.tableRefModel.refTable.multiple) {
                             // 多选处理
@@ -905,6 +1056,10 @@
                             }
                         }
                     },
+                    /**
+                     * 表型参照：数据表格行选择全部事件处理
+                     * @param selection
+                     */
                     selectAll: function (selection) {
                         if (selection.length) {
                             selection.forEach(function (row) {
@@ -918,6 +1073,10 @@
                             });
                         }
                     },
+                    /**
+                     * 表型参照：数据表格取消选择行事件处理
+                     * @param row
+                     */
                     cancelSelect: function (row) {
                         if ($app.$refs.refTable.selection.indexOf(row) != -1) {
                             $app.$refs.refTable.toggleRowSelection(row);
@@ -934,8 +1093,6 @@
             treeRefModel: {},
             treeTableRefModel: {}
         }
-
-
     };
 
     /**
@@ -946,11 +1103,17 @@
 
     /**
      * 公共数据模型
-     * @type {{KEY: [*]}}   KEY命名以大写及下划方式，对应值为数组类型
+     * @type {{KEY: [*]}}   KEY数据集取值标识，[*] 对应值数据集为数组类型
      */
     let commonDataModel = {
         YES_NO : [{label : "是", value : true}, {label : "否",value : false}]
     };
+
+    /**
+     * 扩展模型对象（提供用户自行扩展，数据存储或绑定视图）
+     * @type {{}}
+     */
+    let extendModel = {};
 
     return {
         /**
@@ -978,9 +1141,14 @@
              */
            dataModel = params.dataModel;
             /**
-             * 公共数据模型(默认接收外部传入进行合并)
+             * 公共数据模型（默认接收外部传入进行合并）
              */
             commonDataModel = Object.assign(commonDataModel, params.commonDataModel);
+            /**
+             * 扩展模型对象（提供用户自行扩展，数据存储或绑定视图）
+             * @type {*}
+             */
+            extendModel = params.extendModel || {};
             /********************************** 数据模型处理 end ********************************/
 
 
@@ -1239,7 +1407,7 @@
                         /** 界面模型 */
                         viewModel: viewModel,
                         /** 用户自定义扩展模型 */
-                        userExtendModel: params.userExtendModel || {},
+                        extendModel: extendModel,
                         data: {
                             /** 数据模型 */
                             dataModel: dataModel,
@@ -1275,6 +1443,8 @@
                     if (this.vueEvents && this.vueEvents.created) {
                         this.vueEvents.created(this);
                     }
+                    document.getElementById("page_loading").className += " hide";
+                    document.getElementById("app").className = document.getElementById("app").className.replace("hide","")
                 },
                 beforeMount: function () {
                     if (this.vueEvents && this.vueEvents.beforeMount) {
